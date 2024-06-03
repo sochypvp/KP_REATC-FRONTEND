@@ -415,9 +415,9 @@ const ProductDetail = () => {
             </div>
             {
               url ? (
-                <img src={url} alt="" className="max-h-[400px] m-auto pb-2 " />
+                <img src={url} alt="" className="max-h-[500px] m-auto pb-2 " />
               ) : (
-                <img src={product && (product.header_img)} alt="" className="max-h-[400px] m-auto pb-2 " />
+                <img src={product && (product.header_img)} alt="" className="max-h-[500px] m-auto pb-2 " />
               )
             }
             

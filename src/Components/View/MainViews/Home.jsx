@@ -8,6 +8,7 @@ import BoxForHome from "../SubViews/BoxAndLIst/BoxForHome";
 import { UseBrand } from "../context/brandContext";
 import { UseHomePageContext } from "../context/homePageContext";
 import { Link } from "react-router-dom";
+import "../../swiperCustom.css";
 
 const Home = () => {
 

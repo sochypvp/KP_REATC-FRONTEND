@@ -12,7 +12,7 @@ import { useUser } from "../../context/userContext";
 
 
 
-const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, warranty, addQty, handleAddFav, cartId }) => {
+const ListBox = ({ favData,orderItems, handleCheckItems, unSelectItem, setUnSelectItem, setIsChekedd, selectItem, id, profile, name, brand, price, warranty, addQty, handleAddFav, cartId }) => {
 
   const navigate = useNavigate();
 
@@ -32,7 +32,6 @@ const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, wa
   useEffect(() => {
     if (selectItem) {
       setIsChecked(true);
-      setQuantity(1);
     }
   }, [selectItem]);
 
@@ -42,6 +41,8 @@ const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, wa
       setQuantity(quantity + 1);
       setNewPrice(newPrice + parseInt(price));
       addQty(newPrice);
+      favData.qty = quantity+1;
+      favData.totalPrice = parseInt(newPrice*favData.qty);
     }
 
   };
@@ -52,6 +53,8 @@ const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, wa
       if (quantity > 1) {
         setQuantity(quantity - 1);
         addQty(-newPrice);
+        favData.qty = quantity+1-1;
+        favData.totalPrice = parseInt(price);
       }
     }
 
@@ -73,10 +76,12 @@ const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, wa
 
 
   const handleIsChecked = (event) => {
-    setIsChecked(event.target.checked);
-    if (!isChecked) {
+    const h = handleCheckItems(event, favData, quantity);
+    if (!h) {
       setNewPrice(newPrice + parseInt(price));
       addQty(newPrice * quantity);
+      setQuantity(1);
+      // handleUnCheckItems(orderItems.include(id) && orderItems);
     } else {
       setIsChekedd(false);
       addQty(-newPrice * quantity);
@@ -85,7 +90,7 @@ const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, wa
 
   return (
     <article className=" w-full py-7 pr-2 border-b border-slate-400 text-sm">
-      <input checked={isChecked} onChange={handleIsChecked} className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+      <input checked={orderItems.includes(favData)} onChange={(event)=>handleIsChecked(event)} className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
       <Link to={"/products/" + id} key={id} className="w-full h-full flex ">
         <img
           width="100px"
@@ -103,11 +108,11 @@ const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, wa
             </button>
           </div>
           <div className="flex w-32 p-1 items-center justify-between text-black text-sm border border-slate-400">
-            <button className="px-3 py-1 " onClick={handleDecrement}>
+            <button disabled={!orderItems.includes(favData)} className="px-3 py-1 " onClick={handleDecrement}>
               <MinusIcon className="w-4 h-4" />
             </button>
             <span className="">{quantity}</span>
-            <button className="px-3 py-1 " onClick={handleIncrement}>
+            <button disabled={!orderItems.includes(favData)} className="px-3 py-1 " onClick={handleIncrement}>
               <PlusIcon className="w-4 h-4" />
             </button>
           </div>
@@ -118,7 +123,7 @@ const ListBox = ({ setIsChekedd, selectItem, id, profile, name, brand, price, wa
               <p className="border-b border-black">More to Favorite</p>
             </button>
             <h1>
-              Total: <span className="font-bold">$1200</span>
+              Total: <span className="font-bold">${parseInt(newPrice*quantity)}</span>
             </h1>
           </div>
         </div>

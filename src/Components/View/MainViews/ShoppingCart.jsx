@@ -2,17 +2,45 @@ import { useEffect, useState } from "react";
 import ListBox from "../SubViews/BoxAndLIst/ListBox";
 import { useUser } from "../context/userContext";
 import CheckOut from "./CheckOut";
+import useFetchOnClick from "../../API/useFetchOnClick";
+import { apiOrderProduct } from "../../API/api";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const ShoppingCart = () => {
 
-  const { userCart, addFavorite, error, loading } = useUser();
+  const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
-  var defaultTotal = null;
-  const [subTotal, setSubTotal] = useState(null);
+  const { userCart, addFavorite, error, loading } = useUser();
+  const [orderItems, setOrderItems] = useState(null);
+  let data = userCart;
+  console.log(orderItems);
+
+  const [subTotal, setSubTotal] = useState(0);
 
   useEffect(() => {
-    setSubTotal(defaultTotal);
-  }, [defaultTotal]);
+    if (userCart)
+      setOrderItems(userCart.products);
+  }, [userCart]);
+
+  useEffect(() => {
+    let newTotal = 0;
+    orderItems && orderItems.forEach((item) => {
+      newTotal += parseInt(item.price);
+    });
+    setSubTotal(newTotal);
+  }, [orderItems]);
+
+
+
+  const handleCheckItems = (event, data) => {
+    if (event.target.checked) {
+      setOrderItems([...orderItems, data]);
+    } else {
+      handleIsChecked(event);
+      setOrderItems(orderItems.filter(item => item != data));
+    }
+  }
 
   const handleQtyChange = (newData) => {
     setSubTotal(subTotal + parseInt(newData));
@@ -28,6 +56,7 @@ const ShoppingCart = () => {
   // Check out 
   const [checkoutEvent, setCheckoutEvnet] = useState(false);
 
+
   const hanldeCheckout = (e) => {
     e.preventDefault();
     setCheckoutEvnet(true);
@@ -40,9 +69,55 @@ const ShoppingCart = () => {
 
   const [isChecked, setIsCheked] = useState(true);
 
-  const handleIsChecked = (evnet)=>{
+  const handleIsChecked = (evnet) => {
     setIsCheked(evnet.target.checked);
-    setSubTotal(defaultTotal);
+    if (evnet.target.checked) {
+      setOrderItems(userCart.products.filter(item => item != orderItems));
+    }
+
+  }
+
+  const productOrdering = useFetchOnClick(apiOrderProduct);
+
+  //======= Order =====================================================
+  const orderProductRequest = async (items) => {
+    try {
+      // await axios.get(`${BASE_API_URL}/user/orderProduct`, items);
+      const response = await axios.post(`${BASE_API_URL}user/orderProduct`, items);
+      if (response.data.status) return true;
+      return false;
+    } catch (err) {
+      return err;
+    }
+  }
+  const orderProduct = async (e) => {
+    e.preventDefault();
+    if (orderItems != null || orderItems != []) {
+      const data = {
+        cusData: {
+          customerId: localStorage.getItem('userId'),
+          verify: 0,
+          pay: 0,
+        },
+        orderItems: {}
+      };
+      data.orderItems = orderItems.map((items) => {
+        let qty = 1;
+        if (items.qty) qty = items.qty;
+        const newData = {
+          productId: items.id,
+          QTY: qty
+        }
+        return newData;
+      });
+      const check = await orderProductRequest(data);
+      if (check) {
+        alert("success");
+      } else {
+        alert(check);
+      }
+
+    }
   }
 
   return (
@@ -55,22 +130,26 @@ const ShoppingCart = () => {
             </div>
             {
               checkoutEvent && (
-                <CheckOut product={userCart} error={error} loading={loading} />
+                <CheckOut product={orderItems} error={error} loading={loading} />
               )
             }
-            <div className="form-check">
-              <input onChange={handleIsChecked} checked={isChecked} className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-              <label className="form-check-label">
-                Select all
-              </label>
-            </div>
+            {
+              !checkoutEvent && (
+                <div className="form-check">
+                  <input onChange={handleIsChecked} checked={isChecked} className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                  <label className="form-check-label">
+                    Select all
+                  </label>
+                </div>
+              )
+            }
+
             <div className={`flex-wrap justify-start ${checkoutEvent ? "hidden" : "flex"}`}>
               {
                 error ? (<>{error}</>) : (
                   loading ? (<>Loading...</>) : (
-                    userCart && (
-                      userCart.products.map((favData) => {
-                        defaultTotal += parseInt(favData.price);
+                    userCart && orderItems && (
+                      data.products.map((favData, index) => {
                         var shortName = "";
                         if (favData.productName.length > 60) {
                           shortName =
@@ -80,7 +159,7 @@ const ShoppingCart = () => {
                         }
                         return (
                           <ListBox
-                            key={favData.id}
+                            key={index}
                             id={favData.id}
                             profile={favData.header_img}
                             name={shortName}
@@ -91,7 +170,10 @@ const ShoppingCart = () => {
                             handleAddFav={handleAddFav}
                             cartId={favData.cartId}
                             selectItem={isChecked}
+                            favData={favData}
                             setIsChekedd={setIsCheked}
+                            handleCheckItems={handleCheckItems}
+                            orderItems={orderItems}
                           />
                         );
                       })
@@ -107,7 +189,7 @@ const ShoppingCart = () => {
             </p>
             <div className="flex justify-between py-2 border-b mt-5">
               <h1>Sub Total</h1>
-              <h1>${subTotal ? subTotal : defaultTotal}</h1>
+              <h1>${subTotal ? subTotal : 0}</h1>
             </div>
             <div className="flex justify-between py-2 border-b mt-5">
               <h1>Discount</h1>
@@ -115,7 +197,7 @@ const ShoppingCart = () => {
             </div>
             <div className="flex justify-between py-2 border-b mt-5">
               <h1 className="font-bold text-lg">Total</h1>
-              <h1 className="font-bold text-lg">${subTotal ? subTotal : defaultTotal}</h1>
+              <h1 className="font-bold text-lg">${subTotal ? subTotal : 0}</h1>
             </div>
             {
               checkoutEvent ? (
@@ -123,16 +205,26 @@ const ShoppingCart = () => {
                   <button onClick={handleUnCheckout} className="w-1/2 mr-2 h-14 hover:bg-gray-100 border border-slate-500 font-bold ">
                     Back to cart
                   </button>
-                  <button className="flex justify-center items-center w-1/2 ml-2 h-14 bg-black hover:bg-opacity-80 font-bold text-white ">
-                    Order
+                  <button onClick={orderProduct} className="flex justify-center items-center w-1/2 ml-2 h-14 bg-green-600 hover:bg-opacity-80 font-bold text-white ">
+                    {
+                      productOrdering.loading ? (
+                        <>Loading...</>
+                      ) : (
+                        productOrdering.error ? (
+                          <>{productOrdering.error}</>
+                        ) : (
+                          "Order"
+                        )
+                      )
+                    }
                   </button>
                 </div>
               ) : (
                 <div className="flex justify-between py-2 ">
-                  <button className="w-1/2 mr-2 h-14 hover:bg-gray-100 border border-slate-500 font-bold ">
+                  <Link to={"/products"} className="w-1/2 flex items-center justify-center mr-2 h-14 hover:bg-gray-100 border border-slate-500 font-bold ">
                     Continue Shopping
-                  </button>
-                  <button onClick={hanldeCheckout} className="flex justify-center items-center w-1/2 ml-2 h-14 bg-black hover:bg-opacity-80 font-bold text-white ">
+                  </Link>
+                  <button disabled={subTotal === 0} onClick={hanldeCheckout} className="flex btn justify-center items-center w-1/2 ml-2 h-14 bg-blue-700 hover:bg-opacity-80 font-bold text-white ">
                     Checkout
                   </button>
                 </div>

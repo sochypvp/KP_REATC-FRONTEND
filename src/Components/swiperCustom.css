@@ -1,0 +1,19 @@
+
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: rgb(0, 0, 0); /* Set the color to gray */
+  font-size: 24px; /* Adjust the font size for the icons */
+  width: 50px; /* Set the width of the buttons */
+  height: 50px; /* Set the height of the buttons */
+  border-radius: 50%; /* Optional: make the buttons circular */
+  background-color: rgb(216, 216, 216);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 24px; /* Adjust the icon size */
+}

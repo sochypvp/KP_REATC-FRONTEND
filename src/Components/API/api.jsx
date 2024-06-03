@@ -42,4 +42,9 @@ export const logout = async ()=>{
     await api.post("/auth/logout");
 }
 
+export const apiOrderProduct = async (items)=>{
+    const response = await api.post('/user/orderProduct', items);
+    return response.data;
+}
+
 export default api; 

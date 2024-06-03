@@ -153,7 +153,7 @@ const Product = () => {
                 <option value="0">16 / Page</option>
                 {showByPage}
               </select>
-              <button
+              {/* <button
                 onClick={toggleDiv}
                 className="bg-white h-10 max-md:h-8 px-2 ml-1 mr-4 border border-black outline-none"
               >
@@ -166,7 +166,7 @@ const Product = () => {
                     <Squares2X2Icon className="size-6 max-md:size-4" />
                   </>
                 )}
-              </button>
+              </button> */}
             </div>
           </div>
           <div className=" flex justify-between pt-3 ">

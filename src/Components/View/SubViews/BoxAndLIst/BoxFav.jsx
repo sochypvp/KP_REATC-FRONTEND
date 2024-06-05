@@ -1,6 +1,4 @@
-import { HeartIcon as SolidHeartIcon } from "@heroicons/react/20/solid";
 import {
-  HeartIcon as OutlineHeartIcon,
   ShoppingCartIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -10,15 +8,21 @@ import { useUser } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 
 
-const Box = ({ id, profile, name, brand, price, favId, discount }) => {
+const Box = ({ id, profile, name, brand, price, favId, discount, handleCloseMessage }) => {
 
   const navigate = useNavigate();
 
   const { removeFavorite, addToCart } = useUser();
 
-  const handleRemoveFav = (e)=>{
+  
+  const setMessage = (condi)=>{
+    handleCloseMessage(condi);
+  }
+
+  const handleRemoveFav = async (e)=>{
     e.preventDefault();
-    removeFavorite(favId);
+    const response = await removeFavorite(favId);
+    setMessage(response);
   }
 
   const handleAddToCart = async (e) => {
@@ -33,8 +37,6 @@ const Box = ({ id, profile, name, brand, price, favId, discount }) => {
       navigate('/login');
     }
   };
-
-
 
   return (
     <article className="relative w-1/4 h-[300px] max-md:w-3/6 max-sm:w-2/4 pb mb-10 pr-3 overflow-hidden">
@@ -78,6 +80,8 @@ Box.propTypes = {
   brand: PropTypes.node.isRequired,
   price: PropTypes.node.isRequired,
   favId: PropTypes.node.isRequired,
+  discount: PropTypes.node.isRequired,
+  handleCloseMessage: PropTypes.node.isRequired,
 }
 
 export default Box;

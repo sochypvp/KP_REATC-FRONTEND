@@ -4,6 +4,7 @@ import Favorite from "./Favorite";
 import { useState } from "react";
 import ShoppingCart from "../MainViews/ShoppingCart";
 import { HomeIcon } from "@heroicons/react/24/outline";
+import Delivery from "./Delivery";
 
 const AccounForm = () => {
 
@@ -34,18 +35,18 @@ const AccounForm = () => {
                 Favorite
               </span>
             </Link>
-            {/* <Link to="order" onClick={() => setCurrentPage("Order History")}>
-              <span className="hover:underline border-black mr-5 text-nowrap ">
-                Order History
+            <Link to="deliveryLocation" onClick={() => setCurrentPage("deliveryLocation")}>
+              <span className={`hover:underline border-black mr-5 text-nowrap ${location.pathname === "/my_account/deliveryLocation" && "text-lg font-bold"}`}>
+                Delivery Address
               </span>
-            </Link> */}
+            </Link>
           </nav>
           <div className="w-4/5 max-md:w-full max-md:mt-4">
               <Routes>
                 <Route path="profile" element={<Profile />} />
                 <Route path="favorite" element={<Favorite />} />
                 {/* <Route path="order" element={<OrderHistory />} /> */}
-                <Route path="/cart" element={<ShoppingCart />} />
+                <Route path="deliveryLocation" element={<Delivery />} />
               </Routes>
           </div>
         </article>

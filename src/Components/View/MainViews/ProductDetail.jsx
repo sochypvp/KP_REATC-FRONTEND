@@ -413,13 +413,16 @@ const ProductDetail = () => {
                 $78.00
               </h2>
             </div>
-            {
-              url ? (
-                <img src={url} alt="" className="max-h-[500px] m-auto pb-2 " />
-              ) : (
-                <img src={product && (product.header_img)} alt="" className="max-h-[500px] m-auto pb-2 " />
-              )
-            }
+            <div className="min-h-[47vh] h-[47vh] max-h-[47vh] flex">
+              {
+                url ? (
+                  <img src={url} alt="" className="max-h-[100%] m-auto pb-2 " />
+                ) : (
+                  <img src={product && (product.header_img)} alt="" className="max-h-[100%] m-auto pb-2 " />
+                )
+              }
+            </div>
+            
             
             {
               product && (

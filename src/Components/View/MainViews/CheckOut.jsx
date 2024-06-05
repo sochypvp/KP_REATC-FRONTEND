@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapPinIcon,
   PlusCircleIcon,
@@ -9,11 +9,42 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import CusLoaction from "../GooleMap/CusLoaction";
+import Map from '../GooleMap/CusLoaction';
+import { useUser } from "../context/userContext";
+import PropTypes from 'prop-types';
 
-const CheckOut = ({product, error, loading}) => {
- 
+const CheckOut = ({ product, error, loading }) => {
+
+  const user = useUser();
+  //======== Google map API =================================
+  let initialCenter = {
+    lat: 11.082832479596043,// Latitude for Svay Rieng, Cambodia
+    lng: 105.79927160482406 // Longitude for Svay Rieng, Cambodia
+  };
+  const [markerPosition, setMarkerPosition] = useState(initialCenter);
+  const [address, setAddress] = useState('');
+  const getAddress = (address, markLocation) => {
+    setMarkerPosition(markLocation);
+    setAddress(address);
+  };
+  useEffect(() => {
+    if (user.user) {
+      if (user.user.customer_address && user.user.customer_address.length) {
+        setAddress(user.user.customer_address[0].address);
+        initialCenter.lat = user.user.customer_address[0].lat;
+        initialCenter.lng = user.user.customer_address[0].lng;
+        localStorage.setItem('mapLat', initialCenter.lat);
+        localStorage.setItem('mapLng', initialCenter.lng);
+      }
+    }
+  }, [user.user]);
+  //======== Google map API ==================================
+
+
   const [isOpen, setIsOpen] = useState(false);
+
+  if (user.error) { return <>{user.error}</> }
+  if (user.loading) { return <>Loading...</> }
   return (
     <div className="w-full bg-white text-slate-950">
       <div className="max-sm:w-11/12 w-10/12 m-auto px-4 sm:px-2 md:px-2 lg:px-4 xl:px-0">
@@ -25,8 +56,8 @@ const CheckOut = ({product, error, loading}) => {
               </p>
             </div>
             <div className="w-full border p-2 flex max-lg:flex-col rounded-sm">
-              <div className="w-2/3 max-lg:w-full h-56 bg-slate-200 rounded-sm">
-                <CusLoaction/>
+              <div className="w-2/3 max-lg:w-full h-60 bg-slate-200 rounded-sm">
+                <Map getAddress={getAddress} initialCenter={markerPosition} />
               </div>
               <div className="w-1/3 max-lg:w-full max-lg:mt-2 pr-2 ml-2">
                 <div className="w-full flex items-center justify-between mb-2">
@@ -57,18 +88,18 @@ const CheckOut = ({product, error, loading}) => {
                             <MapPinIcon className="size-9 mx-2" />
                             <div>
                               <h1 className="text-base font-semibold mb-1">
-                                Vanchay
+                                {user && user.customerName}
                               </h1>
                               <h2 className="text-sm font-semibold mb-1">
                                 Address:
                                 <span className="text-xs font-normal ml-2">
-                                  WW9V+QG7, Kampong Rou, Cambodia
+                                  {address && address}
                                 </span>
                               </h2>
                               <h2 className="text-sm font-semibold mb-1">
                                 Note:
                                 <span className="text-xs font-normal ml-2">
-                                  For my PC
+                                  Chhose current location
                                 </span>
                               </h2>
                             </div>
@@ -77,24 +108,24 @@ const CheckOut = ({product, error, loading}) => {
                             <MapPinIcon className="size-9 mx-2" />
                             <div>
                               <h1 className="text-base font-semibold mb-1">
-                                Vanchay
+                                {user && user.customerName}
                               </h1>
                               <h2 className="text-sm font-semibold mb-1">
                                 Address:
                                 <span className="text-xs font-normal ml-2">
-                                  WW9V+QG7, Kampong Rou, Cambodia
+                                  {address}
                                 </span>
                               </h2>
                               <h2 className="text-sm font-semibold mb-1">
                                 Note:
                                 <span className="text-xs font-normal ml-2">
-                                  For my PC
+                                  Chhose current location
                                 </span>
                               </h2>
                             </div>
                           </div>
                           <button className=" border rounded-sm p-2 mr-1 mb-2 flex items-center justify-center">
-                          <PlusCircleIcon className="size-9 mr-1 "/>
+                            <PlusCircleIcon className="size-9 mr-1 " />
                             <h1 className="text-base font-semibold ">
                               Create New
                             </h1>
@@ -106,17 +137,17 @@ const CheckOut = ({product, error, loading}) => {
                 </div>
                 <div className="flex items-center mb-2">
                   <MapPinIcon className="size-5 font-medium mr-1" />
-                  <h1 className="w-[80%] text-base font-semibold">Vanchay</h1>
+                  <h1 className="w-[80%] text-base font-semibold">{user && user.customerName}</h1>
                 </div>
                 <h2 className="text-sm font-semibold mb-1">
                   Address:
                   <span className="text-xs font-normal ml-2">
-                    WW9V+QG7, Kampong Rou, Cambodia
+                    {address && address}
                   </span>
                 </h2>
                 <h2 className="text-sm font-semibold mb-1">
                   Note:
-                  <span className="text-xs font-normal ml-2">For my PC</span>
+                  <span className="text-xs font-normal ml-2">Chhose current location</span>
                 </h2>
               </div>
             </div>
@@ -144,7 +175,7 @@ const CheckOut = ({product, error, loading}) => {
                     product.map((data) => (
                       <article key={data.id} className="relative w-1/5 max-lg:w-1/3 max-sm:w-2/4 pb text-sm max-sm:text-xs mb-10 pr-3">
                         <img
-                          style={{ maxHeight: '120px',minHeight: "120px" }}
+                          style={{ maxHeight: '120px', minHeight: "120px" }}
                           src={data.header_img}
                           alt=""
                           className="w-full m-auto object-cover object-center"
@@ -160,7 +191,7 @@ const CheckOut = ({product, error, loading}) => {
                   )
                 )
               )
-              
+
             }
             {/* {KK[0].data.map((data) => (
               <article key={data.id} className="relative w-1/5 max-lg:w-1/3 max-sm:w-2/4 pb text-sm max-sm:text-xs mb-10 pr-3 overflow-hidden">
@@ -185,4 +216,9 @@ const CheckOut = ({product, error, loading}) => {
   );
 };
 
+CheckOut.propTypes = {
+  product: PropTypes.node.isRequired,
+  error: PropTypes.node.isRequired,
+  loading: PropTypes.node.isRequired,
+}
 export default CheckOut;

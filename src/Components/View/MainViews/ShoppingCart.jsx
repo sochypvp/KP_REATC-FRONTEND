@@ -80,6 +80,7 @@ const ShoppingCart = () => {
   const productOrdering = useFetchOnClick(apiOrderProduct);
 
   //======= Order =====================================================
+
   const orderProductRequest = async (items) => {
     try {
       // await axios.get(`${BASE_API_URL}/user/orderProduct`, items);
@@ -93,11 +94,16 @@ const ShoppingCart = () => {
   const orderProduct = async (e) => {
     e.preventDefault();
     if (orderItems != null || orderItems != []) {
+      let newMarkPosition = null;
+      if(localStorage.getItem('mapLat') && localStorage.getItem('mapLng')){
+        newMarkPosition = localStorage.getItem('mapLat')+"|"+localStorage.getItem('mapLng');
+      }
       const data = {
         cusData: {
           customerId: localStorage.getItem('userId'),
           verify: 0,
           pay: 0,
+          deliveryAddress: newMarkPosition,
         },
         orderItems: {}
       };
@@ -130,7 +136,7 @@ const ShoppingCart = () => {
             </div>
             {
               checkoutEvent && (
-                <CheckOut product={orderItems} error={error} loading={loading} />
+                <CheckOut product={orderItems} error={error} loading={loading}/>
               )
             }
             {

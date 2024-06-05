@@ -84,14 +84,16 @@ export function UserProvider({ children }) {
     }
     const removeFavorite = async (favId) => {
         try {
-            await axios.get(`${BASE_API_URL}user/removeFav/?favId=${favId}`);
+            const response = await axios.get(`${BASE_API_URL}user/removeFav/?favId=${favId}`);
             setRequestCompleted(0);
+            return response.data.status;
         } catch (err) {
             if (err.response && err.response.status == 429) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
             } else {
                 setError(err);
                 setLaoding(false);
+                return false;
             }
         } finally {
             if (requestCompleted === 1) {
@@ -186,8 +188,80 @@ export function UserProvider({ children }) {
         }
     }
 
+    const addDeliveryAddress = async (address)=>{
+        try {
+            const id = localStorage.getItem('userId');
+            address.customerId = id;
+            console.log(address);
+            const response = await axios.post(`${BASE_API_URL}user/addDeliveryAddress`, address);
+            setRequestCompleted(2);
+            return({
+                message: response.data.message,
+                status: response.data.status,
+            })
+        } catch (err) {
+            if(err.response && err.response.status === 429) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            else{
+                setError(err);
+                setLaoding(false);
+            }
+        } finally {
+            if(requestCompleted === 1){
+                setLaoding(false);
+            }
+        }
+    }
+    const updateDeliveryAddress = async (address)=>{
+        try {
+            const id = localStorage.getItem('userId');
+            address.customerId = id;
+            const response = await axios.post(`${BASE_API_URL}user/updateDeliveryAddress`, address);
+            setRequestCompleted(2);
+            return({
+                message: response.data.message,
+                status: response.data.status,
+            })
+        } catch (err) {
+            if(err.response && err.response.status === 429) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            else{
+                setError(err);
+                setLaoding(false);
+            }
+        } finally {
+            if(requestCompleted === 1){
+                setLaoding(false);
+            }
+        }
+    }
+    const deleteDeliveryAddress = async (id)=>{
+        try {
+            const response = await axios.get(`${BASE_API_URL}user/deleteDeliveryAddress?id=${id}`,);
+            setRequestCompleted(2);
+            return({
+                message: response.data.message,
+                status: response.data.status,
+            })
+        } catch (err) {
+            if(err.response && err.response.status === 429) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            else{
+                setError(err);
+                setLaoding(false);
+            }
+        } finally {
+            if(requestCompleted === 1){
+                setLaoding(false);
+            }
+        }
+    }
+
     return (
-        <UserContext.Provider value={{ userFavPdtId, user, userFav, userCart, error, loading, addFavorite, addToCart, setRequestCompleted, removeFavorite, removeCart, updateUserData, updateUserPassword }}>
+        <UserContext.Provider value={{ userFavPdtId, user, userFav, userCart, error, loading, addFavorite, addToCart, setRequestCompleted, removeFavorite, removeCart, updateUserData, updateUserPassword, addDeliveryAddress, updateDeliveryAddress, deleteDeliveryAddress }}>
             {children}
         </UserContext.Provider>
     )

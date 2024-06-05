@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const containerStyle = {
   width: '100%',
@@ -8,7 +9,8 @@ const containerStyle = {
 };
 
 
-const Map = ({ getAddress, initialCenter }) => {
+const DeliveryLocation = ({ getMarkLocation,getAddress,initialCenter }) => {
+
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -36,9 +38,7 @@ const Map = ({ getAddress, initialCenter }) => {
     };
     setMarkerPosition(newPosition);
     getGeocode(newPosition);
-    
-    localStorage.setItem('mapLat', newPosition.lat);
-    localStorage.setItem('mapLng', newPosition.lng);
+    getMarkLocation(newPosition); 
   }, [address, markerPosition]);
 
   const getGeocode = async ({ lat, lng }) => {
@@ -52,8 +52,8 @@ const Map = ({ getAddress, initialCenter }) => {
         if (results.length > 0) {
           const address = results[0].formatted_address;
           setAddress(address);
-          getAddress(address, markerPosition);
-          console.log('Address:', address); // Log the address to console
+          getAddress(address);
+          
         } else {
           setAddress('No address found');
         }
@@ -80,7 +80,7 @@ const Map = ({ getAddress, initialCenter }) => {
       return () => {
         marker.setMap(null);
       };
-      
+
     }
   }, [map, markerPosition, onMarkerDragEnd]);
 
@@ -106,4 +106,10 @@ const Map = ({ getAddress, initialCenter }) => {
   ) : <></>;
 }
 
-export default React.memo(Map);
+DeliveryLocation.propTypes = {
+  getMarkLocation: PropTypes.node.isRequired,
+  getAddress: PropTypes.node.isRequired,
+  initialCenter: PropTypes.node.isRequired,
+}
+
+export default React.memo(DeliveryLocation);

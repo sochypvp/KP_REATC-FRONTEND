@@ -19,7 +19,7 @@ const MessageBox = ({ message, onClose, duration }) => {
     <>
       {isVisible && (
         <div className="fixed right-10 p-1 bottom-10" style={{ zIndex: '1000' }}>
-        <article className="relative max-w-md border py-3 px-4 bg-slate-100 rounded-sm">
+        <article className="relative max-w-md border border-blue-500 py-3 px-4 bg-blue-100 rounded-sm">
             <div className="flex items-center justify-center">
                 <CheckCircleIcon className=" size-5" />
                 <h1 className="text-sm font-semibold ml-4 mr-4">{message}</h1>

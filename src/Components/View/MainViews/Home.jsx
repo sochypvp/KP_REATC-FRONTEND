@@ -9,14 +9,34 @@ import { UseBrand } from "../context/brandContext";
 import { UseHomePageContext } from "../context/homePageContext";
 import { Link } from "react-router-dom";
 import "../../swiperCustom.css";
+import MessageBox from "../SubViews/BoxAndLIst/AlertBox";
+import { useState } from "react";
 
 const Home = () => {
+
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState(false);
+
+  const handleCloseMessage = (response) => {
+    setShowMessage(response.status);
+    setMessage(response.message);
+  }
 
   const brands = UseBrand();
   const dataContext = UseHomePageContext();
 
   return (
     <div className="pt-4 w-full bg-white">
+      {showMessage && (
+        <>
+          <MessageBox
+            message={message}
+            onClose={() => handleCloseMessage(false)}
+            duration={3000} // Duration in milliseconds (3 seconds in this example)
+          />
+          {showMessage}
+        </>
+      )}
       <div className="max-sm:w-11/12 w-10/12 m-auto py-6 lg:px-8">
         <BoxSlide />
         {/* Best discount */}
@@ -66,6 +86,7 @@ const Home = () => {
                               brand={items.get_brand}
                               barcode={items.barcode}
                               discount={items.discount}
+                              handleCloseMessage={handleCloseMessage}
                             />
                           </SwiperSlide>
                         );
@@ -124,7 +145,8 @@ const Home = () => {
                               brand={items.get_brand}
                               discount={""}
                               barcode={items.barcode}
-                            />
+ handleCloseMessage={handleCloseMessage}
+ />
                           </SwiperSlide>
                         );
                       })

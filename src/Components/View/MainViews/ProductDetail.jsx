@@ -466,7 +466,7 @@ const ProductDetail = () => {
                                   
                 </h2>
               </div>
-              <div className="flex flex-col justify-center text-sm font-medium mt-6 ">
+              {/* <div className="flex flex-col justify-center text-sm font-medium mt-6 ">
                 <p>Quantity</p>
                 <div className="flex items-center justify-between w-44 border py-3 px-1 mt-1">
                   <button
@@ -483,7 +483,7 @@ const ProductDetail = () => {
                     <PlusIcon className="size-4 " />
                   </button>
                 </div>
-              </div>
+              </div> */}
               <div className="mt-6 text-base font-semibold text-gray-500 ">
                 <button onClick={() => handleAbout("Details")}>
                   <span
@@ -560,13 +560,13 @@ const ProductDetail = () => {
                 )}
               </div>
               <div className="flex flex-wrap w-full text-sm font-bold text-white mt-3 ">
-                <button onClick={handleAddToCart} className="flex bg-gradient-to-r from-rose-400 to-red-500 shadow rounded border bg-black py-3 w-44 mr-2 mt-2 text-nowrap items-center justify-center">
+                <button onClick={handleAddToCart} className="flex bg-gradient-to-r  shadow-sm rounded border bg-white text-gray-800 py-3 w-44 mr-2 mt-2 text-nowrap items-center justify-center">
                   <ShoppingCartIcon className="size-5 mr-1"/> Add to Cart
                 </button>
-                <button className="bg-gradient-to-r from-rose-400 to-red-500 flex shadow rounded border bg-black py-3 w-44 mr-2 mt-2 text-nowrap items-center justify-center">
+                <Link to={"/buying/"+id} className="bg-gradient-to-r  flex shadow-sm rounded border bg-white text-gray-800 py-3 w-44 mr-2 mt-2 text-nowrap items-center justify-center">
                   <ShoppingCartIcon className="size-5 mr-1"/> Buy Now
-                </button>
-                <button onClick={handleFavorite} className="bg-gradient-to-r from-rose-400 to-red-500 shadow rounded border bg-black py-3 w-44 mr-2 mt-2 text-nowrap flex items-center justify-center">
+                </Link>
+                <button onClick={handleFavorite} className="bg-gradient-to-r  shadow-sm rounded border bg-white text-gray-800 py-3 w-44 mr-2 mt-2 text-nowrap flex items-center justify-center">
                   <HeartIcon className="size-5 mr-1" /><p>Favorite</p>
                 </button>
               </div>

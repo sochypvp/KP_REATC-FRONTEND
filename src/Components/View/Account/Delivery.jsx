@@ -8,8 +8,15 @@ import {
 import { useEffect, useState } from "react";
 import { useUser } from "../context/userContext";
 import DeliveryLocation from "../GooleMap/DeliveryLocation";
+import MessageBox from "../SubViews/BoxAndLIst/AlertBox";
 
 const Delivery = () => {
+
+  const [showMessage, setShowMessage] = useState(false);
+  const handleCloseMessage = (condi) => {
+    setShowMessage(condi);
+  }
+
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpenCreate, setIsOpenCreate] = useState(false);
 
@@ -59,16 +66,27 @@ const Delivery = () => {
     }
     const sendBack = await addDeliveryAddress(data);
     if (sendBack.status) {
-      alert(sendBack.message);
       setIsOpenCreate(false);
+      setShowMessage(sendBack.message);
     }
   }
   // ======= Edit location ===================================
-  const showLocation = (lat, lng)=>{
+  const openCreateLocation = ()=>{
+    setIsOpenCreate(true);
     setMarkerPosition({
-      lat: lat,
-      lng: lng,
+      lat: 11.0828104350322,
+      lng: 105.79920555542363,
     });
+    setNote('');
+    setLabel('');
+  }
+  const showLocation = (items)=>{
+    setMarkerPosition({
+      lat: items.lat,
+      lng: items.lng,
+    });
+    setNote(items.note);
+    setLabel(items.label);
   }
   const editLocation = async () => {
     const data = {
@@ -81,14 +99,14 @@ const Delivery = () => {
     }
     const sendBack = await updateDeliveryAddress(data);
     if (sendBack.status) {
-      alert(sendBack.message);
       setIsOpenEdit(false);
+      setShowMessage(sendBack.message);
     }
   }
   const removeLoction = async (id)=>{
     const sendBack = await deleteDeliveryAddress(id);
     if (sendBack.status) {
-      alert(sendBack.message);
+      setShowMessage(sendBack.message);
     }
   }
   //======== Google map API ==================================
@@ -96,6 +114,16 @@ const Delivery = () => {
   if (loading) return <>Loading..</>;
   return (
     <article className="min-h-[43vh]">
+      {showMessage && (
+        <>
+          <MessageBox
+            message="remove successfully"
+            onClose={() => handleCloseMessage(false)}
+            duration={3000} // Duration in milliseconds (3 seconds in this example)
+          />
+          {showMessage}
+        </>
+      )}
       <p className="text-black uppercase font-extrabold text-lg max-md:text-base">
         Delivery Address
       </p>
@@ -114,7 +142,7 @@ const Delivery = () => {
                       </h1>
                       <div className="absolute top-[-15px] right-1">
                         <button
-                          onClick={() => { setIsOpenEdit(true), setLocationId(items.id), showLocation(items.lat,items.lng) }}
+                          onClick={() => { setIsOpenEdit(true), setLocationId(items.id), showLocation(items) }}
                           className=" text-black font-semibold underline text-xs"
                           data-value={items.id}
                         >
@@ -143,7 +171,7 @@ const Delivery = () => {
 
         <div className="w-1/3 max-lg:w-1/2 max-sm:w-full h-28 pr-2 mb-2">
           <button
-            onClick={() => setIsOpenCreate(true)}
+            onClick={openCreateLocation}
             className="w-full h-full border-dashed border-2 rounded-sm p-2 mr-1 mb-2 flex items-center justify-center"
           >
             <PlusCircleIcon className="size-9 mr-1 " />
@@ -167,27 +195,13 @@ const Delivery = () => {
             </DialogTitle>
             <div className="w-full flex max-md:flex-col ">
               <div className="w-2/3 max-md:w-full pr-5 max-md:pr-0">
-                <div className="relative md:my-4 max-md:my-2 ">
-                  <div className="relative h-10 bg-gray-500">
-                    <MagnifyingGlassIcon className="absolute size-4 top-3 left-2" />
-                    <input
-                      type="text"
-                      name="Search"
-                      // value={}
-                      id=""
-                      // onChange={}
-                      className="block w-full shadow-sm border border-b-black h-full pl-8 pr-3 bg-white text-gray-900 outline-none placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                      placeholder="Search..."
-                    />
-                  </div>
-                </div>
-                <div className="w-full h-80 max-md:h-60 bg-slate-200 rounded-sm">
+                <div className="w-full h-full pt-2 max-md:h-60 rounded-sm">
                   <DeliveryLocation getMarkLocation={getMarkLocation} getAddress={getAddress} initialCenter={markerPosition} />
                 </div>
               </div>
-              <div className="w-1/3 max-md:w-full">
-                <div className="relative my-2 ">
-                  <label htmlFor="Label" className="py-2 text-sm font-medium">
+              <div className="w-1/3 max-md:w-full h-full" >
+                <div className="relative">
+                  <label htmlFor="Label" className=" text-sm font-medium">
                     Label
                   </label>
                   <div className="relative h-10 bg-gray-500">
@@ -254,27 +268,13 @@ const Delivery = () => {
             </DialogTitle>
             <div className="w-full flex max-md:flex-col ">
               <div className="w-2/3 max-md:w-full pr-5 max-md:pr-0">
-                <div className="relative md:my-4 max-md:my-2 ">
-                  <div className="relative h-10 bg-gray-500">
-                    <MagnifyingGlassIcon className="absolute size-4 top-3 left-2" />
-                    <input
-                      type="text"
-                      name="Search"
-                      // value={}
-                      id=""
-                      // onChange={}
-                      className="block w-full shadow-sm border border-b-black h-full pl-8 pr-3 bg-white text-gray-900 outline-none placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                      placeholder="Search..."
-                    />
-                  </div>
-                </div>
-                <div className="w-full h-80 max-md:h-60 bg-slate-200 rounded-sm">
+                <div className="w-full h-full pt-2 max-md:h-60 rounded-sm">
                   <DeliveryLocation getMarkLocation={getMarkLocation} getAddress={getAddress} initialCenter={markerPosition} />
                 </div>
               </div>
-              <div className="w-1/3 max-md:w-full">
-                <div className="relative my-2 ">
-                  <label htmlFor="Label" className="py-2 text-sm font-medium">
+              <div className="w-1/3 max-md:w-full h-full" >
+                <div className="relative">
+                  <label htmlFor="Label" className=" text-sm font-medium">
                     Label
                   </label>
                   <div className="relative h-10 bg-gray-500">

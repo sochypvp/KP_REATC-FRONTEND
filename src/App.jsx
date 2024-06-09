@@ -21,6 +21,7 @@ import { AuthProvider } from "./Components/View/context/AuthContext";
 import PrivateRoute from "./Components/route/PrivateRoute";
 import { UserProvider } from "./Components/View/context/userContext";
 import CheckOut from "./Components/View/MainViews/CheckOut";
+import Buying from "./Components/View/MainViews/Buying";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
                       <Route path="/login" element={<LogIn />} />
                       <Route path="/register" element={<Register />} />
                       <Route path="/checkout" element={<CheckOut/>} />
+                      <Route path="/buying/:id" element={<Buying/>}/>
                     </Routes>
                     <Footer />
                   </Router>

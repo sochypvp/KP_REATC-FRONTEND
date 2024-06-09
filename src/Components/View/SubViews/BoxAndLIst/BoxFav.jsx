@@ -15,14 +15,16 @@ const Box = ({ id, profile, name, brand, price, favId, discount, handleCloseMess
   const { removeFavorite, addToCart } = useUser();
 
   
-  const setMessage = (condi)=>{
-    handleCloseMessage(condi);
+  const setMessage = (response)=>{
+    handleCloseMessage(response);
   }
 
   const handleRemoveFav = async (e)=>{
     e.preventDefault();
     const response = await removeFavorite(favId);
-    setMessage(response);
+    if(response){
+     setMessage({status: response, message: 'Remove successfully'});
+    }
   }
 
   const handleAddToCart = async (e) => {
@@ -32,7 +34,10 @@ const Box = ({ id, profile, name, brand, price, favId, discount, handleCloseMess
         productId: id,
         customerId: localStorage.getItem('userId'),
       }
-      await addToCart(data);
+      const response = await addToCart(data);
+      if(response){
+        setMessage({status: response, message: 'Add successfully'});
+       }
     } else {
       navigate('/login');
     }

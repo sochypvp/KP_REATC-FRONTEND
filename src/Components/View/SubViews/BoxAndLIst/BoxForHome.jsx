@@ -9,7 +9,11 @@ import PropTypes from "prop-types";
 import { useUser } from "../../context/userContext";
 import MessageBox from "./AlertBox";
 
-const BoxForHome = ({ id, profile, name, brand, price, discount }) => {
+const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMessage }) => {
+
+  const setMessage = (response)=>{
+    handleCloseMessage(response);
+  }
 
   const navigate = useNavigate();
 
@@ -26,7 +30,7 @@ const BoxForHome = ({ id, profile, name, brand, price, discount }) => {
       }
       const check = await addFavorite(data);
       if (check) {
-        alert("Add to favorite successfully","lol");
+        setMessage({status: check, message: "Add successfully"});
       }
       setFavorite(!favorite);
     } else {
@@ -41,8 +45,10 @@ const BoxForHome = ({ id, profile, name, brand, price, discount }) => {
         productId: id,
         customerId: localStorage.getItem('userId'),
       }
-      await addToCart(data);
-      setFavorite(!favorite);
+      const check = await addToCart(data);
+      if (check) {
+        setMessage({status: check, message: "Add successfully"});
+      }
     } else {
       navigate('/login');
     }

@@ -7,9 +7,11 @@ import MessageBox from "../SubViews/BoxAndLIst/AlertBox";
 const Favorite = () => {
 
   const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState(null);
 
-  const handleCloseMessage = (condi) => {
-    setShowMessage(condi);
+  const handleCloseMessage = (response) => {
+    setShowMessage(response.status);
+    setMessage(response.message);
   }
 
 
@@ -20,8 +22,8 @@ const Favorite = () => {
       {showMessage && (
         <>
           <MessageBox
-            message="remove successfully"
-            onClose={() => handleCloseMessage(false)}
+            message={message}
+            onClose={() => setShowMessage(false)}
             duration={3000} // Duration in milliseconds (3 seconds in this example)
           />
           {showMessage}

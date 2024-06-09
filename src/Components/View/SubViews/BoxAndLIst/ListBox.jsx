@@ -12,7 +12,11 @@ import { useUser } from "../../context/userContext";
 
 
 
-const ListBox = ({ favData,orderItems, handleCheckItems, unSelectItem, setUnSelectItem, setIsChekedd, selectItem, id, profile, name, brand, price, warranty, addQty, handleAddFav, cartId }) => {
+const ListBox = ({ handleCloseMessage, favData,orderItems, handleCheckItems, setIsChekedd, selectItem, id, profile, name, price, warranty, addQty, handleAddFav, cartId }) => {
+
+  const setMessage = (response)=>{
+    handleCloseMessage(response);
+  }
 
   const navigate = useNavigate();
 
@@ -23,7 +27,10 @@ const ListBox = ({ favData,orderItems, handleCheckItems, unSelectItem, setUnSele
 
   const hanldeRemoveCart = async (e) => {
     e.preventDefault();
-    await removeCart(cartId);
+    const response = await removeCart(cartId);
+    if(response){
+      setMessage({status: response, message: 'Remove successfully'});
+    }
   }
 
 

@@ -6,10 +6,20 @@ import useFetchOnClick from "../../API/useFetchOnClick";
 import { apiOrderProduct } from "../../API/api";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import MessageBox from "../SubViews/BoxAndLIst/AlertBox";
+import ConfirmBox from "../SubViews/BoxAndLIst/ConfirmBox";
 
 const ShoppingCart = () => {
 
   const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+
+  const [showMessage, setShowMessage] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  const handleCloseMessage = (response) => {
+    setShowMessage(response.status);
+    setMessage(response.message);
+  }
 
   const { userCart, addFavorite, error, loading } = useUser();
   const [orderItems, setOrderItems] = useState(null);
@@ -50,7 +60,10 @@ const ShoppingCart = () => {
   // }
 
   const handleAddFav = async (data) => {
-    await addFavorite(data);
+    const response = await addFavorite(data);
+    if(response){
+      setMessage({status: response, message: 'Remove successfully'});
+    }
   }
 
   // Check out 
@@ -80,6 +93,12 @@ const ShoppingCart = () => {
   const productOrdering = useFetchOnClick(apiOrderProduct);
 
   //======= Order =====================================================
+  const [alertConfirm, setAlertConfirm] = useState(false);
+  const closeConfirmBox = (e) => {
+    e.preventDefault();
+    setAlertConfirm(false);
+  }
+  const [location, setLocation] = useState('');
 
   const orderProductRequest = async (items) => {
     try {
@@ -94,16 +113,12 @@ const ShoppingCart = () => {
   const orderProduct = async (e) => {
     e.preventDefault();
     if (orderItems != null || orderItems != []) {
-      let newMarkPosition = null;
-      if(localStorage.getItem('mapLat') && localStorage.getItem('mapLng')){
-        newMarkPosition = localStorage.getItem('mapLat')+"|"+localStorage.getItem('mapLng');
-      }
       const data = {
         cusData: {
           customerId: localStorage.getItem('userId'),
           verify: 0,
           pay: 0,
-          deliveryAddress: newMarkPosition,
+          deliveryAddress: location,
         },
         orderItems: {}
       };
@@ -119,6 +134,7 @@ const ShoppingCart = () => {
       const check = await orderProductRequest(data);
       if (check) {
         alert("success");
+        setAlertConfirm(false);
       } else {
         alert(check);
       }
@@ -127,7 +143,20 @@ const ShoppingCart = () => {
   }
 
   return (
-    <div className="w-full pt-5 bg-white text-slate-950">
+    <div className="w-full relative pt-5 bg-white text-slate-950">
+      {alertConfirm && (
+            <ConfirmBox close={closeConfirmBox} action={orderProduct}/>
+          )}
+      {showMessage && (
+        <>
+          <MessageBox
+            message={message}
+            onClose={() => handleCloseMessage(false)}
+            duration={3000} // Duration in milliseconds (3 seconds in this example)
+          />
+          {showMessage}
+        </>
+      )}
       <div className="max-sm:w-11/12 w-10/12 m-auto px-4 sm:px-2 md:px-2 lg:px-4 xl:px-0 pt-5">
         <div className="flex">
           <article className="w-[70%] py-2 pr-2">
@@ -136,7 +165,7 @@ const ShoppingCart = () => {
             </div>
             {
               checkoutEvent && (
-                <CheckOut product={orderItems} error={error} loading={loading}/>
+                <CheckOut product={orderItems} error={error} loading={loading} deliveryAddress={setLocation}/>
               )
             }
             {
@@ -180,6 +209,7 @@ const ShoppingCart = () => {
                             setIsChekedd={setIsCheked}
                             handleCheckItems={handleCheckItems}
                             orderItems={orderItems}
+                            handleCloseMessage={handleCloseMessage}
                           />
                         );
                       })
@@ -211,7 +241,7 @@ const ShoppingCart = () => {
                   <button onClick={handleUnCheckout} className="w-1/2 mr-2 h-14 hover:bg-gray-100 border border-slate-500 font-bold ">
                     Back to cart
                   </button>
-                  <button onClick={orderProduct} className="flex justify-center items-center w-1/2 ml-2 h-14 bg-green-600 hover:bg-opacity-80 font-bold text-white ">
+                  <button onClick={()=>setAlertConfirm(true)} className="flex justify-center items-center w-1/2 ml-2 h-14 bg-green-600 hover:bg-opacity-80 font-bold text-white ">
                     {
                       productOrdering.loading ? (
                         <>Loading...</>

@@ -8,10 +8,15 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import MessageBox from "../SubViews/BoxAndLIst/AlertBox";
 import ConfirmBox from "../SubViews/BoxAndLIst/ConfirmBox";
+import { useNavigate } from "react-router-dom";
 
 const ShoppingCart = () => {
 
+
+
   const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+
+  const navigate = useNavigate();
 
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState(null);
@@ -21,12 +26,13 @@ const ShoppingCart = () => {
     setMessage(response.message);
   }
 
-  const { userCart, addFavorite, error, loading } = useUser();
+  const { userCart, addFavorite, error, loading, setRequestCompleted } = useUser();
   const [orderItems, setOrderItems] = useState(null);
   let data = userCart;
-  console.log(orderItems);
 
   const [subTotal, setSubTotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [totalPay, setTotalPay] = useState(0);
 
   useEffect(() => {
     if (userCart)
@@ -34,11 +40,19 @@ const ShoppingCart = () => {
   }, [userCart]);
 
   useEffect(() => {
+    let newSubTotal = 0;
+    let newDiscount = 0;
     let newTotal = 0;
-    orderItems && orderItems.forEach((item) => {
-      newTotal += parseInt(item.price);
+    orderItems && orderItems.forEach((item, index) => {
+      if (item.discount && item.discount >= 0) {
+        newDiscount += parseFloat(item.discount);
+      }
+      newSubTotal += parseFloat(item.price);
+      newTotal += parseFloat(item.price);
     });
-    setSubTotal(newTotal);
+    setSubTotal(newSubTotal);
+    setDiscount(newDiscount);
+    setTotalPay(newTotal - newDiscount)
   }, [orderItems]);
 
 
@@ -61,8 +75,8 @@ const ShoppingCart = () => {
 
   const handleAddFav = async (data) => {
     const response = await addFavorite(data);
-    if(response){
-      setMessage({status: response, message: 'Remove successfully'});
+    if (response) {
+      setMessage({ status: response, message: 'Remove successfully' });
     }
   }
 
@@ -104,6 +118,7 @@ const ShoppingCart = () => {
     try {
       // await axios.get(`${BASE_API_URL}/user/orderProduct`, items);
       const response = await axios.post(`${BASE_API_URL}user/orderProduct`, items);
+      console.log(response.data.message);
       if (response.data.status) return true;
       return false;
     } catch (err) {
@@ -113,28 +128,50 @@ const ShoppingCart = () => {
   const orderProduct = async (e) => {
     e.preventDefault();
     if (orderItems != null || orderItems != []) {
+      console.log(orderItems);
+
+      let totalItems = 0;
+      let totalPayment = 0;
+      let allOrderItems = orderItems.map((items) => {
+        let qty = 1;
+        if (items.qty) qty = items.qty;
+        const newData = {
+          productId: items.id,
+          QTY: qty,
+          totalPrice: qty * parseFloat(items.price),
+        }
+
+        totalItems += qty;
+        totalPayment += qty * parseFloat(items.price);
+        return newData;
+      });
       const data = {
         cusData: {
           customerId: localStorage.getItem('userId'),
           verify: 0,
           pay: 0,
+          totalItems: totalItems,
+          totalProducts: orderItems.length,
+          totalPayment: totalPayment,
           deliveryAddress: location,
         },
-        orderItems: {}
+        orderItems: allOrderItems
       };
-      data.orderItems = orderItems.map((items) => {
-        let qty = 1;
-        if (items.qty) qty = items.qty;
-        const newData = {
-          productId: items.id,
-          QTY: qty
-        }
-        return newData;
-      });
+      // data.orderItems = orderItems.map((items) => {
+      //   let qty = 1;
+      //   if (items.qty) qty = items.qty;
+      //   const newData = {
+      //     productId: items.id,
+      //     QTY: qty
+      //   }
+      //   return newData;
+      // });
+      // console.log(data);
       const check = await orderProductRequest(data);
       if (check) {
         alert("success");
         setAlertConfirm(false);
+        window.location.reload();
       } else {
         alert(check);
       }
@@ -145,8 +182,8 @@ const ShoppingCart = () => {
   return (
     <div className="w-full relative pt-5 bg-white text-slate-950">
       {alertConfirm && (
-            <ConfirmBox close={closeConfirmBox} action={orderProduct}/>
-          )}
+        <ConfirmBox close={closeConfirmBox} action={orderProduct} />
+      )}
       {showMessage && (
         <>
           <MessageBox
@@ -165,7 +202,7 @@ const ShoppingCart = () => {
             </div>
             {
               checkoutEvent && (
-                <CheckOut product={orderItems} error={error} loading={loading} deliveryAddress={setLocation}/>
+                <CheckOut product={orderItems} error={error} loading={loading} deliveryAddress={setLocation} />
               )
             }
             {
@@ -192,6 +229,9 @@ const ShoppingCart = () => {
                         } else {
                           shortName = favData.productName;
                         }
+                        if (favData.discount && favData.discount > 0) {
+                          favData.discountPrice = favData.price - ((favData.price / 100) * favData.discount);
+                        }
                         return (
                           <ListBox
                             key={index}
@@ -199,6 +239,7 @@ const ShoppingCart = () => {
                             profile={favData.header_img}
                             name={shortName}
                             price={favData.price}
+                            discount={favData.discount}
                             brand={favData.brand}
                             barcode={favData.barcode}
                             addQty={handleQtyChange}
@@ -210,6 +251,11 @@ const ShoppingCart = () => {
                             handleCheckItems={handleCheckItems}
                             orderItems={orderItems}
                             handleCloseMessage={handleCloseMessage}
+                            setSubTotal={setSubTotal}
+                            subTotal={subTotal}
+                            setDiscount={setDiscount}
+                            setTotalPay={setTotalPay}
+                            totalPay={totalPay}
                           />
                         );
                       })
@@ -225,15 +271,15 @@ const ShoppingCart = () => {
             </p>
             <div className="flex justify-between py-2 border-b mt-5">
               <h1>Sub Total</h1>
-              <h1>${subTotal ? subTotal : 0}</h1>
+              <h1>${subTotal}</h1>
             </div>
             <div className="flex justify-between py-2 border-b mt-5">
               <h1>Discount</h1>
-              <h1>$0.0</h1>
+              <h1>${discount}</h1>
             </div>
             <div className="flex justify-between py-2 border-b mt-5">
               <h1 className="font-bold text-lg">Total</h1>
-              <h1 className="font-bold text-lg">${subTotal ? subTotal : 0}</h1>
+              <h1 className="font-bold text-lg">${totalPay}</h1>
             </div>
             {
               checkoutEvent ? (
@@ -241,7 +287,7 @@ const ShoppingCart = () => {
                   <button onClick={handleUnCheckout} className="w-1/2 mr-2 h-14 hover:bg-gray-100 border border-slate-500 font-bold ">
                     Back to cart
                   </button>
-                  <button onClick={()=>setAlertConfirm(true)} className="flex justify-center items-center w-1/2 ml-2 h-14 bg-green-600 hover:bg-opacity-80 font-bold text-white ">
+                  <button onClick={() => setAlertConfirm(true)} className="flex justify-center items-center w-1/2 ml-2 h-14 bg-green-600 hover:bg-opacity-80 font-bold text-white ">
                     {
                       productOrdering.loading ? (
                         <>Loading...</>

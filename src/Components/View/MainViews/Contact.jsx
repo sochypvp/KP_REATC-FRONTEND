@@ -42,7 +42,7 @@ const Contact = () => {
                 <EnvelopeIcon className="size-6" />
               </span>
               <h2 className="mt-4 text-base font-medium">Email Address</h2>
-              <p className="mt-2 text-sm">Email@gmail.com</p>
+              <p className="mt-2 text-sm">hem.sokhom@yahoo.com</p>
             </div>
 
             <div className="p-4 rounded-lg border-1 md:p-6 text-black ">
@@ -50,8 +50,9 @@ const Contact = () => {
                 <PhoneIcon className="size-6" />
               </span>
               <h2 className="mt-4 text-base font-medium">Phone Number</h2>
-              <p className="mt-2 text-sm">(+855) 60446580</p>
-              <p className="mt-2 text-sm">(+855) 60446580</p>
+              <p className="mt-2 text-sm">(+855) 088 816 8138</p>
+              <p className="mt-2 text-sm">(+855) 070747583</p>
+              <p className="mt-2 text-sm">(+855) 017 665 779</p>
             </div>
           </div>
         </div>

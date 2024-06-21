@@ -13,13 +13,17 @@ const Buying = () => {
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLaoding] = useState(false);
-  console.log(id);
+
+  const [quantity, setQuantity] = useState(1);
+  const [subTotal, setSubTotal] = useState(null);
+  const [realPrice, setRealPrice] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${BASE_API_URL}products/getOneProduct/${id}`);
         setProduct(response.data.data);
+        if (response) setRealPrice(response.data.data.price - response.data.data.discount)
         setLaoding(false);
         console.log(product);
       } catch (error) {
@@ -30,15 +34,26 @@ const Buying = () => {
     fetchData();
   }, []);
 
-  const [quantity, setQuantity] = useState(1);
+  console.log(realPrice);
 
   const handleIncrement = () => {
     setQuantity(quantity + 1);
+    if (product) {
+      let newQty = quantity+1;
+      setRealPrice((product.price - product.discount) * newQty);
+      setSubTotal(product.price * newQty);
+    }
+    
   };
 
   const handleDecrement = () => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
+      if (product) {
+        let newQty = quantity-1;
+        setRealPrice((product.price - product.discount) * newQty);
+        setSubTotal(product.price * newQty);
+      }
     }
   };
   // == Ordering ===================================
@@ -66,13 +81,17 @@ const Buying = () => {
           customerId: localStorage.getItem('userId'),
           verify: 0,
           pay: 0,
+          totalItems: quantity,
+          totalProducts: 1,
+          totalPayment: realPrice,
           deliveryAddress: location,
         },
         orderItems: {}
       };
       data.orderItems = {
         productId: product.id,
-        QTY: 1
+        QTY: quantity,
+        totalPrice: realPrice,
       }
       setAlertConfirm(true);
       console.log(data);
@@ -94,7 +113,7 @@ const Buying = () => {
       <div className="max-sm:w-11/12 w-10/12 m-auto px-4 sm:px-2 md:px-2 lg:px-4 xl:px-0">
         <div className="flex max-sm:flex-col border-b">
           {alertConfirm && (
-            <ConfirmBox close={closeConfirmBox} action={orderProduct}/>
+            <ConfirmBox close={closeConfirmBox} action={orderProduct} />
           )}
           <CheckOut deliveryAddress={setLocation} />
           <article className="w-1/3 max-lg:w-1/2 max-sm:w-full  py-2 pr-2 text-sm text-black ">
@@ -120,29 +139,33 @@ const Buying = () => {
                 </button>
               </div>
             </div>
-            <div className="flex justify-between py-2 border-b mt-3">
+            <div className="flex justify-between py-1 border-b mt-4">
               <h1>Sub Total</h1>
-              <h1>${product.price}</h1>
+              <h1>${subTotal ? subTotal : product.price}</h1>
             </div>
-            <div className="flex justify-between py-2 border-b mt-5">
+            <div className="flex justify-between py-1 border-b mt-4">
               <h1>Discount</h1>
-              <h1>{product.discount}%</h1>
+              <h1>${product.discount}</h1>
             </div>
-            <div className="flex justify-between py-2 border-b mt-5">
+            <div className="flex justify-between py-1 border-b mt-4">
+              <h1>Discount</h1>
+              <h1>${product.discount * quantity}</h1>
+            </div>
+            <div className="flex justify-between py-1 border-b mt-5">
               <h1 className="font-bold text-lg">Total</h1>
               <h1 className="font-bold text-lg">
                 {
                   product.discount && product.discount != 0 ? (
-                    <h1 className=" flex text-lg bottom-0 left-0 font-bold ">${(product.price) - (product.price / 100 * product.discount)}<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${product.price}</h1></h1>
+                    <h1 className=" flex text-lg bottom-0 left-0 font-bold ">${realPrice}<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${product.price * quantity}</h1></h1>
                     // <h1 className="bg-red-500 w-[60px] d-flex justify-center text-white p-1">{discount}%</h1>
                   ) : (
-                    <h1 className=" text-lg bottom-0 left-0 font-bold">${product.price}</h1>
+                    <h1 className=" text-lg bottom-0 left-0 font-bold">${realPrice}</h1>
                   )
                 }
               </h1>
             </div>
             <div className="flex justify-between py-2 ">
-              <button onClick={()=>setAlertConfirm(true)} className="flex bg-gradient-to-r hover:bg-gray-100 shadow-sm rounded border  text-gray-800 py-3 w-100 mt-2 text-nowrap items-center justify-center">
+              <button onClick={() => setAlertConfirm(true)} className="flex bg-gradient-to-r hover:bg-gray-100 shadow-sm rounded border  text-gray-800 py-3 w-100 mt-2 text-nowrap items-center justify-center">
                 <h1 className="text-sm font-bold">Buy</h1>
               </button>
             </div>

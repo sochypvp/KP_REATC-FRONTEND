@@ -1,270 +1,3 @@
-// // import { faHeart, faHome } from "@fortawesome/free-solid-svg-icons";
-// // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-// import axios from "axios";
-// import { useEffect } from "react";
-// import {  useState } from "react";
-// import { Link, useNavigate, useParams } from "react-router-dom";
-// import { useUser } from "../context/userContext";
-// // import { getProduct } from "../../FatchAPI/fetchProduct";
-
-// const ProductDetail = () => {
-
-//   const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
-
-//   const navigate = useNavigate();
-
-//   // const id = useParams().id;
-//   //   console.log(id);
-//   const [quantity, setQuantity] = useState(1);
-//   const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
-//   const [Spec, setSpec] = useState(true);
-//   const [Dsec, setDsec] = useState(false);
-
-//   const handleIncrement = () => {
-//     setQuantity(quantity + 1);
-//   };
-
-//   const handleDecrement = () => {
-//     if (quantity > 0) {
-//       setQuantity(quantity - 1);
-//     }
-//   };
-
-//   const handleSpec = () => {
-//     setSpec(true);
-//     setDsec(false);
-//   };
-//   const handleDesc = () => {
-//     setDsec(true);
-//     setSpec(false);
-//   };
-
-//   const handleToggleWishlist = () => {
-//     setIsAddedToWishlist(!isAddedToWishlist);
-//   };
-
-//   const [url, setUrl] = useState(
-//     "https://dlcdnwebimgs.asus.com/gain/cefd241b-b64b-4c4a-acba-af8e31cf232e/w800/fwebp"
-//   );
-
-//   const viewImg = (e) => {
-//     setUrl(e.currentTarget.src);
-//   };
-
-
-//   const { id } = useParams();
-//   const [product, setProduct] = useState(null);
-//   const [error, setError] = useState(null);
-//   const [loading, setLaoding] = useState(false);
-//   console.log(id);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.get(`${BASE_API_URL}products/getOneProduct/${id}`);
-//         setProduct(response.data.data);
-//         setLaoding(false);
-//         console.log(product);
-//       } catch (error) {
-//         setError(error);
-//         setLaoding(false);
-//       }
-//     }
-//     fetchData();
-//   }, []);
-
-//   const { addFavorite, addToCart } = useUser();
-
-//   const handleFavorite = async (e) => {
-//     e.preventDefault();
-//     if (localStorage.getItem('userId') != null) {
-//       const data = {
-//         productId: id,
-//         customerId: localStorage.getItem('userId'),
-//       }
-//       const check = await addFavorite(data);
-//       if (check) {
-//         // setShowMessage(true);
-//       } else {
-//         // setShowMessage(false);
-//       }
-//       // setFavorite(!favorite);
-//     } else {
-//       navigate('/login');
-//     }
-
-//   };
-//   const handleAddToCart = async (e) => {
-//     e.preventDefault();
-//     if (localStorage.getItem('userId') != null) {
-//       const data = {
-//         productId: id,
-//         customerId: localStorage.getItem('userId'),
-//       }
-//       await addToCart(data);
-//       // setFavorite(!favorite);
-//     } else {
-//       navigate('/login');
-//     }
-//   };
-
-//   if (error) {
-//     return <>{error}</>;
-//   }
-
-//   if (loading) {
-//     return <>Loading...</>;
-//   }
-
-//   return (
-//     <div className="relative w-full bg-white text-slate-950 overflow-hidden">
-//       <div className="max-sm:w-full w-10/12 m-auto py-2 pl-4 lg:px-8">
-//         <div className="flex pt-[90px] items-center text-base max-sm:text-sm pb-6">
-//           <Link to="/products">
-//             <ArrowLeftIcon className="size-4 mr-2" />
-//           </Link>
-//           <span className="mr-2">/</span>
-//           <Link to="/products">
-//             <span className="mr-2">Products</span>
-//           </Link>
-//           <span className="mr-2">/</span>
-//           <span className="mr-2">
-//             {product && (product.productName.substring(0, 30))}...
-//           </span>
-//         </div>
-//         {/* =========== */}
-//         <div className="flex">
-//           <div className=" w-[50%]">
-//             <div className="flex items-center justify-center  w-full relative py-2">
-//               <img src={product && (product.header_img)} alt="" className="h-[400px]" />
-//             </div>
-//             {
-//               product && (
-//                 <div className="flex py-[4px] space-x-2">
-//                   {
-//                     product.product_img && (
-//                       product.product_img.map((items, index) => (
-//                         <img
-//                           key={index}
-//                           onClick={viewImg}
-//                           src={items.imageUrl}
-//                           alt=""
-//                           className="h-[56px] "
-//                         />
-//                       ))
-//                     )
-//                   }
-//                 </div>
-//               )
-//             }
-
-//           </div>
-//           {/* === */}
-//           <div className=" w-[50%]">
-//             <div>
-//               <h1 className="text-xl font-extrabold ">
-//                 {product && (product.productName)}
-//               </h1>
-//               <h1 className="text-lg text-slate-1000 pt-2">
-//                 {
-//                   product && (
-//                     product.get_brand && (
-//                       product.get_brand.brandName
-//                     )
-//                   )
-//                 }
-//               </h1>
-//               <h2 className="text-blue-700 text-3xl font-extrabold mt-6 ">
-//                 $
-//                 {
-//                   product && (product.price)
-//                 }
-//               </h2>
-//               <div className="flex flex-col justify-center space-y-2 mt-4">
-//                 <div className="flex items-center text-base">
-//                   <h3 className="w-40 font-bold ">Category</h3>:
-//                   <span className="ml-5">
-//                     {
-//                       product && (
-//                         product.sub_category && (
-//                           product.sub_category.categoryName
-//                         )
-//                       )
-//                     }
-//                   </span>
-//                 </div>
-//                 <div className="flex items-center text-base">
-//                   <h3 className="w-40 font-bold ">Part Number</h3>:
-//                   <span className="ml-5">{product && (product.partNumber)}</span>
-//                 </div>
-//                 <div className="flex items-center text-base">
-//                   <h3 className="w-40 font-bold ">UPC / BARCODE</h3>:
-//                   <span className="ml-5">{product && (product.barcode)}</span>
-//                 </div>
-//                 <div className="flex items-center text-base">
-//                   <h3 className="w-40 font-bold ">Warranty</h3>:
-//                   <span className="ml-5">{product && (product.warranty)}</span>
-//                 </div>
-//               </div>
-//             </div>
-//             {/* === */}
-//             <div className="flex flex-col justify-center space-y-2 mt-4">
-//               <div className="flex flex-col justify-center space-y-2">
-//                 <p>Quantity</p>
-//                 <div className="flex items-center justify-between w-[148px] h-[42px] border-[1px] border-blue-500 rounded-md">
-//                   <button
-//                     className="px-3 py-1 rounded-md text-gray-700 font-semibold"
-//                     onClick={handleDecrement}
-//                   >
-//                     -
-//                   </button>
-//                   <span className="text-blue-500 font-semibold">
-//                     {quantity}
-//                   </span>
-//                   <button
-//                     className="px-3 py-1 rounded-md text-gray-700 font-semibold"
-//                     onClick={handleIncrement}
-//                   >
-//                     +
-//                   </button>
-//                 </div>
-//               </div>
-//               <div className="flex items-center space-x-2">
-//                 <button onClick={handleAddToCart} className="w-[148px] h-[42px] border-[1px] border-blue-500 rounded-md text-blue-500 font-semibold">
-//                   Add to Cart
-//                 </button>
-//                 <Link to={"/cart"} className="w-[148px] h-[42px] bg-blue-500 flex justify-center items-center rounded-lg text-slate-50">
-//                   Buy Now
-//                 </Link>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//         {/* =========== */}
-//         <div className=" pt-2">
-//           <div className="text-lg font-bold text-gray-700">
-//             <button className="p-1" onClick={handleDesc}>Description</button>|
-//             <button className="p-1" onClick={handleSpec}>Specifications</button>
-//           </div>
-//           {/* Conditional rendering of div1 based on showDiv1 state */}
-//           {Spec && (
-//             <div dangerouslySetInnerHTML={{ __html: product && (product.specifications) }} className="w-full rounded-md border-[1px] border-slate-300 p-5">
-//               {/* {product && (product.specifications)} */}
-//             </div>
-//           )}
-//           {/* Conditional rendering of div2 based on showDiv2 state */}
-//           {Dsec && (
-//             <div dangerouslySetInnerHTML={{ __html: product && (product.description) }} className="w-full rounded-md border-[1px] border-slate-300 p-5 uppercase">
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductDetail;
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -299,7 +32,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
   const [Spec, setSpec] = useState(true);
-  const [Dsec, setDsec] = useState(false); 
+  const [Dsec, setDsec] = useState(false);
   const [about, setAbout] = useState("Details");
   const handleAbout = (objActive) => {
     setAbout(objActive);
@@ -388,6 +121,11 @@ const ProductDetail = () => {
     return <>Loading...</>;
   }
 
+  let discountPercent = 0;
+  if (product) {
+    discountPercent = ((100 / product.price) * product.discount).toFixed(2);
+  }
+
   return (
     <article className="pt-[70px] relative w-full text-black overflow-hidden">
       <div className="max-sm:w-11/12 w-10/12 m-auto py-6 lg:px-8">
@@ -422,8 +160,8 @@ const ProductDetail = () => {
                 )
               }
             </div>
-            
-            
+
+
             {
               product && (
                 <div className="flex">
@@ -461,9 +199,19 @@ const ProductDetail = () => {
                 </h1>
                 <h2 className="underline underline-offset-4 text-3xl font-extrabold mt-6 ">
                   {
-                    product && (<h1 className="bg-gradient-to-r from-red-600 via-rose-500 to-red-400 inline-block text-transparent bg-clip-text">${product.price}</h1>)
+                    product && (
+                      product.discount > 0 ? (
+                        <h1 className="bg-gradient-to-r from-red-600 via-rose-500 to-red-400 inline-block text-transparent bg-clip-text">
+                          ${product.price - product.discount} <span className="text-lg line-through text-red-600 font-semibold align-top">${product.price}</span>
+                          <span className="text-sm font-medium text-red-500 bg-red-100 flex items-center p-1 ml-1 justify-center">{discountPercent}%</span>
+                        </h1>
+                      ) : (
+                        <h1 className="bg-gradient-to-r from-red-600 via-rose-500 to-red-400 inline-block text-transparent bg-clip-text">
+                          ${product.price}
+                        </h1>
+                      )
+                    )
                   }
-                                  
                 </h2>
               </div>
               {/* <div className="flex flex-col justify-center text-sm font-medium mt-6 ">
@@ -561,10 +309,10 @@ const ProductDetail = () => {
               </div>
               <div className="flex flex-wrap w-full text-sm font-bold text-white mt-3 ">
                 <button onClick={handleAddToCart} className="flex bg-gradient-to-r  shadow-sm rounded border bg-white text-gray-800 py-3 w-44 mr-2 mt-2 text-nowrap items-center justify-center">
-                  <ShoppingCartIcon className="size-5 mr-1"/> Add to Cart
+                  <ShoppingCartIcon className="size-5 mr-1" /> Add to Cart
                 </button>
-                <Link to={"/buying/"+id} className="bg-gradient-to-r  flex shadow-sm rounded border bg-white text-gray-800 py-3 w-44 mr-2 mt-2 text-nowrap items-center justify-center">
-                  <ShoppingCartIcon className="size-5 mr-1"/> Buy Now
+                <Link to={"/buying/" + id} className="bg-gradient-to-r  flex shadow-sm rounded border bg-white text-gray-800 py-3 w-44 mr-2 mt-2 text-nowrap items-center justify-center">
+                  <ShoppingCartIcon className="size-5 mr-1" /> Buy Now
                 </Link>
                 <button onClick={handleFavorite} className="bg-gradient-to-r  shadow-sm rounded border bg-white text-gray-800 py-3 w-44 mr-2 mt-2 text-nowrap flex items-center justify-center">
                   <HeartIcon className="size-5 mr-1" /><p>Favorite</p>
@@ -596,54 +344,6 @@ const ProductDetail = () => {
                 1200: { slidesPerView: 5 },
               }}
             >
-              <SwiperSlide
-                key={1}
-                className="relative group pb-2 text-sm mb-10 overflow-hidden"
-              >
-                <BoxForHome
-                  key={1}
-                  id={1}
-                  profile={""}
-                  name={
-                    "Asus GT301 TUF GAMING CASE, BLK, ARGB, FAN (90DC0040-B40000)"
-                  }
-                  price={"70.00"}
-                  brand={"ASUS"}
-                  barcode={""}
-                />
-              </SwiperSlide>
-              <SwiperSlide
-                key={1}
-                className="relative group pb-2 text-sm mb-10 overflow-hidden"
-              >
-                <BoxForHome
-                  key={1}
-                  id={1}
-                  profile={""}
-                  name={
-                    "Asus GT301 TUF GAMING CASE, BLK, ARGB, FAN (90DC0040-B40000)"
-                  }
-                  price={"70.00"}
-                  brand={"ASUS"}
-                  barcode={""}
-                />
-              </SwiperSlide>
-              <SwiperSlide
-                key={1}
-                className="relative group pb-2 text-sm mb-10 overflow-hidden"
-              >
-                <BoxForHome
-                  key={1}
-                  id={1}
-                  profile={""}
-                  name={
-                    "Asus GT301 TUF GAMING CASE, BLK, ARGB, FAN (90DC0040-B40000)"
-                  }
-                  price={"70.00"}
-                  brand={"ASUS"}
-                  barcode={""}
-                />
-              </SwiperSlide>
               <SwiperSlide
                 key={1}
                 className="relative group pb-2 text-sm mb-10 overflow-hidden"

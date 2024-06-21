@@ -32,7 +32,7 @@ const ConfirmBox = ({close, action})=>{
                   </button>
                   {/* Trash icon */}
                   {/* Modal text */}
-                  <p className="mb-4 text-gray-900">Are you sure you want to delete this item?</p>
+                  <p className="mb-4 text-gray-900">We will contact you after you order?</p>
                   {/* Modal action buttons */}
                   <div className="flex justify-center items-center space-x-4">
                     <button

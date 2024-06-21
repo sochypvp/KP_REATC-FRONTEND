@@ -1,3 +1,4 @@
+import { FaceSmileIcon, StarIcon } from "@heroicons/react/20/solid";
 import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 const Footer = () => {
@@ -46,19 +47,19 @@ const Footer = () => {
                 className="bg-white text-black shadow-lg font-normal p-2 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                 type="button"
               >
-                <FaceFrownIcon className="w-6 h-6" />
+                <StarIcon className="w-6 h-6" />
               </button>
               <button
                 className="bg-white text-black shadow-lg font-normal p-2 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                 type="button"
               >
-                <FaceFrownIcon className="w-6 h-6" />
+                <StarIcon className="w-6 h-6" />
               </button>
               <button
                 className="bg-white text-black shadow-lg font-normal p-2 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
                 type="button"
               >
-                <FaceFrownIcon className="w-6 h-6" />
+                <StarIcon className="w-6 h-6" />
               </button>
               
             </div>
@@ -79,24 +80,17 @@ const Footer = () => {
                     </Link>
                   </li>
                   <li>
-                    <a
+                    <a href="https://web.facebook.com/kpcsvayrieng/?_rdc=1&_rdr" target="_blank"
                       className="text-black hover:text-black font-semibold block pb-2 text-sm"
                     >
-                      Blog
+                      Facebook
                     </a>
                   </li>
                   <li>
                     <a
                       className="text-black hover:text-black font-semibold block pb-2 text-sm"
                     >
-                      Github
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="text-black hover:text-black font-semibold block pb-2 text-sm"
-                    >
-                      Free Products
+                      Telegram
                     </a>
                   </li>
                 </ul>
@@ -125,8 +119,8 @@ const Footer = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="my_account/order" className="text-black hover:text-black font-semibold block pb-2 text-sm">
-                      Order History
+                    <Link to="my_account/trackOrder" className="text-black hover:text-black font-semibold block pb-2 text-sm">
+                      Track Order
                     </Link>
                   </li>
                 </ul>

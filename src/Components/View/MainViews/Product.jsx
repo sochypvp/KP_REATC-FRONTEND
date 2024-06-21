@@ -3,26 +3,23 @@ import {
   ChevronRightIcon,
   FunnelIcon,
   HomeIcon,
-  ListBulletIcon,
-  Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 import Box from "../SubViews/BoxAndLIst/Box";
 import { UseSubCateg } from "../context/subCategContext";
 import { UseMainCateg } from "../context/mainCategContext";
 import { UseBrand } from "../context/brandContext";
-import { ProductPagination, UseProduct } from "../context/productContext";
 import { Disclosure } from "@headlessui/react";
 import { Link, useSearchParams } from "react-router-dom";
-import AlertBox from "../SubViews/BoxAndLIst/AlertBox";
 import LoadingSpinner from "../loading/LoadingSpinner";
+import { useProduct, useProductPagination } from "../context/productContext";
 
 const Product = () => {
 
   const subCategory = UseSubCateg();
   const mainCategory = UseMainCateg();
   const brand = UseBrand();
-  const productContext = UseProduct();
-  const { showProductByPage, showProductBySubCateg, showProductByHight, showProductByLow, refreshProduct, showProductByMainCateg, showProductByBrand } = ProductPagination();
+  const productContext = useProduct();
+  const { showProductByPage, showProductBySubCateg, showProductByHight, showProductByLow, refreshProduct, showProductByMainCateg, showProductByBrand } = useProductPagination();
   // console.log(productContext.productPagination);
 
 

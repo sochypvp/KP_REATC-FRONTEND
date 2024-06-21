@@ -62,6 +62,11 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
     }
   };
 
+  let discountPercent = 0;
+  if(discount){
+    discountPercent = ((100 / price) * discount).toFixed(2);
+  }
+
   return (
     <article className="relative h-[300px] w-1/4 max-md:w-3/6 max-sm:w-2/4 pb mb-10 pr-3 overflow-hidden">
       {showMessage && (
@@ -87,7 +92,7 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
         </h1>
         {
           discount && discount != 0 ? (
-            <h1 className="absolute flex text-lg bottom-0 left-0 font-bold ">${(price)-(price/100*discount)}<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1></h1>
+            <h1 className="absolute flex text-lg bottom-0 left-0 font-bold ">${ price-discount }<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1><span className="text-sm font-normal text-red-500 bg-red-100 flex items-center p-1 ml-1 justify-center">{ discountPercent }%</span></h1>
             // <h1 className="bg-red-500 w-[60px] d-flex justify-center text-white p-1">{discount}%</h1>
           ) : (
             <h1 className="absolute text-lg bottom-0 left-0 font-bold">${price}</h1>

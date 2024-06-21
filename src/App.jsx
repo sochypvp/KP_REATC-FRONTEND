@@ -25,37 +25,35 @@ import Buying from "./Components/View/MainViews/Buying";
 
 function App() {
   return (
-    <ProductProvider>
-      <MainCategProvider>
-        <SubCategProvider>
-          <BrandProvider>
-            <HomePageProvider>
-              <AuthProvider>
-                <UserProvider>
-                  <Router>
-                    <Header />
-                    <Routes>
-                      {/* <MainPage /> */}
-                      <Route path="/" element={<Home />} />
-                      <Route path="/products" element={<Product />} />
-                      <Route path="/products/:id" element={<ProductDetail />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/my_account/*" element={<PrivateRoute component={AccounForm} />} />
-                      <Route path="/cart" element={<PrivateRoute component={ShoppingCart} />} />
-                      <Route path="/login" element={<LogIn />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/checkout" element={<CheckOut/>} />
-                      <Route path="/buying/:id" element={<Buying/>}/>
-                    </Routes>
-                    <Footer />
-                  </Router>
-                </UserProvider>
-              </AuthProvider>
-            </HomePageProvider>
-          </BrandProvider>
-        </SubCategProvider>
-      </MainCategProvider>
-    </ProductProvider>
+    <MainCategProvider>
+      <SubCategProvider>
+        <BrandProvider>
+          <HomePageProvider>
+            <AuthProvider>
+              <UserProvider>
+                <Router>
+                  <Header />
+                  <Routes>
+                    {/* <MainPage /> */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/products" element={<ProductProvider><Product /></ProductProvider>} />
+                    <Route path="/products/:id" element={<ProductDetail />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/my_account/*" element={<PrivateRoute component={AccounForm} />} />
+                    <Route path="/cart" element={<PrivateRoute component={ShoppingCart} />} />
+                    <Route path="/login" element={<LogIn />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/checkout" element={<CheckOut />} />
+                    <Route path="/buying/:id" element={<Buying />} />
+                  </Routes>
+                  <Footer />
+                </Router>
+              </UserProvider>
+            </AuthProvider>
+          </HomePageProvider>
+        </BrandProvider>
+      </SubCategProvider>
+    </MainCategProvider>
 
   );
 }

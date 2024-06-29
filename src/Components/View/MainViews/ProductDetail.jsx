@@ -13,12 +13,15 @@ import {
   ChartBarIcon,
   ShoppingCartIcon,
   HeartIcon,
+  ViewfinderCircleIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import BoxForHome from "../SubViews/BoxAndLIst/BoxForHome";
 import axios from "axios";
 import { useUser } from "../context/userContext";
+import '../../../style/ImageModal.css'
 // import { getProduct } from "../../FatchAPI/fetchProduct";
 
 const ProductDetail = () => {
@@ -59,6 +62,7 @@ const ProductDetail = () => {
 
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [similarProduct, setSimilarProduct] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLaoding] = useState(false);
   console.log(id);
@@ -68,6 +72,10 @@ const ProductDetail = () => {
       try {
         const response = await axios.get(`${BASE_API_URL}products/getOneProduct/${id}`);
         setProduct(response.data.data);
+        if (response.data.data) {
+          const response2 = await axios.get(`${BASE_API_URL}products/selectSimilarProduct?categoryName=${response.data.data.sub_category.categoryName}`);
+          setSimilarProduct(response2.data);
+        }
         setLaoding(false);
         console.log(product);
       } catch (error) {
@@ -113,6 +121,14 @@ const ProductDetail = () => {
     }
   };
 
+  const [viewImage, setViewImage] = useState(null);
+  const openImageModal = (image) => {
+    setViewImage(image);
+  }
+  const closeImageModal = () => {
+    setViewImage(null);
+  }
+
   if (error) {
     return <>{error}</>;
   }
@@ -151,7 +167,7 @@ const ProductDetail = () => {
                 $78.00
               </h2>
             </div>
-            <div className="min-h-[47vh] h-[47vh] max-h-[47vh] flex">
+            <div className="image-grid min-h-[47vh] h-[47vh] max-h-[47vh] flex relative">
               {
                 url ? (
                   <img src={url} alt="" className="max-h-[100%] m-auto pb-2 " />
@@ -159,9 +175,19 @@ const ProductDetail = () => {
                   <img src={product && (product.header_img)} alt="" className="max-h-[100%] m-auto pb-2 " />
                 )
               }
+              {
+                url ? (
+                  <button onClick={() => openImageModal(url)} className="absolute right-0 top-0"><ViewfinderCircleIcon className="size-8" /></button>
+                ) : (
+                  <button onClick={() => openImageModal(product && (product.header_img))} className="absolute right-0 top-0"><ViewfinderCircleIcon className="size-8" /></button>
+                )
+              }
             </div>
-
-
+            {
+              viewImage && (
+                <ImageModal image={viewImage} onClose={closeImageModal} />
+              )
+            }
             {
               product && (
                 <div className="flex">
@@ -344,22 +370,33 @@ const ProductDetail = () => {
                 1200: { slidesPerView: 5 },
               }}
             >
-              <SwiperSlide
-                key={1}
-                className="relative group pb-2 text-sm mb-10 overflow-hidden"
-              >
-                <BoxForHome
-                  key={1}
-                  id={1}
-                  profile={""}
-                  name={
-                    "Asus GT301 TUF GAMING CASE, BLK, ARGB, FAN (90DC0040-B40000)"
-                  }
-                  price={"70.00"}
-                  brand={"ASUS"}
-                  barcode={""}
-                />
-              </SwiperSlide>
+
+              {
+                product && (
+                  similarProduct && (
+                    similarProduct.map((items, key) => {
+                      return (
+                        <SwiperSlide
+                          key={1}
+                          className="relative group pb-2 text-sm mb-10 overflow-hidden"
+                        >
+                          <BoxForHome
+                            key={key}
+                            id={items.id}
+                            profile={items.header_img}
+                            name={items.productName}
+                            price={items.price}
+                            brand={items.get_brand}
+                            barcode={items.barcode}
+                            discount={items.discount}
+                          />
+                        </SwiperSlide>
+                      )
+                    })
+                  )
+                )
+
+              }
             </Swiper>
           </div>
         </div>
@@ -367,5 +404,19 @@ const ProductDetail = () => {
     </article>
   );
 };
+
+const ImageModal = ({ image, onClose }) => {
+  return (
+    <div className="modal-overlay fixed z-50" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <img src={image} className="modal-image" />
+        <button className="close-button absolute" onClick={onClose}>
+          <XMarkIcon className="size-8" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 
 export default ProductDetail;

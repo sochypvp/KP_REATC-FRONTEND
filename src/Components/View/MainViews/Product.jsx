@@ -19,7 +19,7 @@ const Product = () => {
   const mainCategory = UseMainCateg();
   const brand = UseBrand();
   const productContext = useProduct();
-  const { showProductByPage, showProductBySubCateg, showProductByHight, showProductByLow, refreshProduct, showProductByMainCateg, showProductByBrand } = useProductPagination();
+  const { showProductByPage, showProductBySubCateg, showProductByHight, showProductByLow, refreshProduct, showProductByMainCateg, showProductByBrand, requestCompleted } = useProductPagination();
   // console.log(productContext.productPagination);
 
 
@@ -81,24 +81,27 @@ const Product = () => {
   // === Check URL params ============================
   const [searchParams] = useSearchParams();
   const mainCateg = searchParams.get('mainCateg');
+  const brandId = searchParams.get('brand');
 
-  useEffect(() => {
+  useEffect(() => { 
     if (mainCateg) {
       showProductByMainCateg(mainCateg);
       mainCategClickHandler(parseInt(mainCateg))
       console.log(mainCategOnActive);
     }
-    if(location.pathname === "/products"){
-      refreshProduct();
+    if (brandId) {
+      showProductByBrand(brandId);
+      brandClickHandler(parseInt(brandId))
+      console.log(brandId);
     }
-  }, [mainCateg]);
+  }, [requestCompleted, mainCateg]);
   // === Check URL params ============================
 
 
   const [showPopup, setShowPopup] = useState(false);
 
   return (
-    <>
+    <div>
       <div className="relative w-full pt-5 bg-white text-slate-950 overflow-hidden">
         <div className="max-sm:w-full w-10/12 m-auto py-2 pl-4 lg:px-8">
           <div className="flex items-center text-base max-sm:text-sm pb-6">
@@ -150,20 +153,6 @@ const Product = () => {
                 <option value="0">16 / Page</option>
                 {showByPage}
               </select>
-              {/* <button
-                onClick={toggleDiv}
-                className="bg-white h-10 max-md:h-8 px-2 ml-1 mr-4 border border-black outline-none"
-              >
-                {showDiv1 ? (
-                  <>
-                    <ListBulletIcon className="size-6 max-md:size-4" />
-                  </>
-                ) : (
-                  <>
-                    <Squares2X2Icon className="size-6 max-md:size-4" />
-                  </>
-                )}
-              </button> */}
             </div>
           </div>
           <div className=" flex justify-between pt-3 ">
@@ -358,7 +347,7 @@ const Product = () => {
                             key={index}
                           >
                             <a data={element.url} className="page-link">{element.label}</a>
-                          </li>;
+                          </li>
                           if (index == 0) {
                             paginateList = <li
                               onClick={PaginationHandler}
@@ -366,7 +355,7 @@ const Product = () => {
                               key={index}
                             >
                               <span data={element.url} className="page-link">Previous</span>
-                            </li>;
+                            </li>
                           }
                           if (index == productContext.productPagination.length - 1) {
                             paginateList = <li
@@ -375,7 +364,7 @@ const Product = () => {
                               key={index}
                             >
                               <span data={element.url} className="page-link">Next</span>
-                            </li>;
+                            </li>
                           }
                           return (
                             paginateList
@@ -391,7 +380,7 @@ const Product = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

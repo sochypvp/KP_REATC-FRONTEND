@@ -43,7 +43,6 @@ function App() {
                     <Route path="/cart" element={<PrivateRoute component={ShoppingCart} />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/checkout" element={<CheckOut />} />
                     <Route path="/buying/:id" element={<Buying />} />
                   </Routes>
                   <Footer />

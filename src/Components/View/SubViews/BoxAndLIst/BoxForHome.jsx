@@ -102,8 +102,8 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
         }
 
         {
-          discount && (
-            <h1 className="bg-red-500 w-[60px] d-flex justify-center text-white p-1">{discount}%</h1>
+          discount > 0 && (
+            <h1 className="bg-red-200 w-[60px] d-flex justify-center text-red-700 p-1">${discount}</h1>
           )
         }
       </Link>

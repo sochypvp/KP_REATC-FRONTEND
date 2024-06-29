@@ -87,7 +87,7 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
         />
         <h1 className="mt-4 text-sm text-black">{name}</h1>
         <h1 className="text-blue-500 font-semibold flex w-full justify-between text-shadow-red p-1">
-          {brand.brandName}
+          <h1>{brand.brandName}</h1>
           <img className="min-h-5 max-h-5" src={brand.logo} />
         </h1>
         {
@@ -128,13 +128,6 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
             )
           )
         }
-        {/* {
-          discount && discount != 0 ? (
-            <h1 className="bg-red-500 w-[60px] d-flex justify-center text-white p-1">{discount}%</h1>
-          ) : (
-            <></>
-          )
-        } */}
       </Link>
     </article>
   );
@@ -144,9 +137,7 @@ Box.propTypes = {
   id: PropTypes.node.isRequired,
   profile: PropTypes.node.isRequired,
   name: PropTypes.node.isRequired,
-  brand: PropTypes.node.isRequired,
   price: PropTypes.node.isRequired,
-  discount: PropTypes.node.isRequired,
 }
 
 export default Box;

@@ -1,37 +1,8 @@
 import { FaceSmileIcon, StarIcon } from "@heroicons/react/20/solid";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftStartOnRectangleIcon, FaceFrownIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 const Footer = () => {
   return (
-    // <footer classNameName="text-slate-50 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 py-2">
-    //   <div classNameName="max-sm:w-11/12 w-10/12 m-auto my-6 flex justify-between ">
-    //     <div>
-    //       <h1 classNameName="font-bold">KPcomputer</h1>
-    //     </div>
-    //     <div>
-    //       <h1 classNameName="font-bold">About</h1>
-    //       <div classNameName="flex flex-col mt-8">
-    //         <Link to="/contact">Contact Us</Link>
-    //         <Link to="/term-condition">Terms and conditios</Link>
-    //         <Link to="/privacy">Privacy Policy</Link>
-    //       </div>
-    //     </div>
-    //     <div>
-    //       <h1 classNameName="font-bold">My Account</h1>
-    //       <div classNameName="flex flex-col mt-8">
-    //         <Link to="/profile">Profile</Link>
-    //         <Link to="/cart">View Cart</Link>
-    //         <Link to="/order">My Order</Link>
-    //         <Link to="/wishlist">My Wishlist</Link>
-    //         <Link to="/track-order">Track Order</Link>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <hr classNameName="max-sm:w-11/12 w-10/12 m-auto my-6" />
-    //   <div classNameName="mmax-sm:w-11/12 w-10/12 m-auto my-6 ">
-    //     <p>Copyright © 2024 KP Computer & Electronic. All rights reserved.</p>
-    //   </div>
-    // </footer>
     <footer className="relative bg-blueGray-200 pt-8 pb-6 bg-white border-t">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap text-left lg:text-left">
@@ -61,7 +32,6 @@ const Footer = () => {
               >
                 <StarIcon className="w-6 h-6" />
               </button>
-              
             </div>
           </div>
           <div className="w-full lg:w-6/12 px-4">

@@ -62,38 +62,38 @@ const Home = () => {
               }}
             >
               {dataContext.error ? (<>{dataContext.error}</>) : (
-                  dataContext.loading ? (<>Loading...</>) : (
-                    dataContext.bestDiscountProduct && (
-                      dataContext.bestDiscountProduct.map((items) => {
-                        var shortName = "";
-                        if (items.productName.length > 100) {
-                          shortName =
-                            items.productName.substring(0, 100).toUpperCase() + "...";
-                        } else {
-                          shortName = items.productName;
-                        }
-                        return (
-                          <SwiperSlide
+                dataContext.loading ? (<>Loading...</>) : (
+                  dataContext.bestDiscountProduct && (
+                    dataContext.bestDiscountProduct.map((items) => {
+                      var shortName = "";
+                      if (items.productName.length > 100) {
+                        shortName =
+                          items.productName.substring(0, 100).toUpperCase() + "...";
+                      } else {
+                        shortName = items.productName;
+                      }
+                      return (
+                        <SwiperSlide
+                          key={items.id}
+                          className="relative group pb-2 text-sm mb-10 overflow-hidden"
+                        >
+                          <BoxForHome
                             key={items.id}
-                            className="relative group pb-2 text-sm mb-10 overflow-hidden"
-                          >
-                            <BoxForHome
-                              key={items.id}
-                              id={items.id}
-                              profile={items.header_img ? (items.header_img) : ("none")}
-                              name={shortName}
-                              price={items.price}
-                              brand={items.get_brand}
-                              barcode={items.barcode}
-                              discount={items.discount}
-                              handleCloseMessage={handleCloseMessage}
-                            />
-                          </SwiperSlide>
-                        );
-                      })
-                    )
+                            id={items.id}
+                            profile={items.header_img ? (items.header_img) : ("none")}
+                            name={shortName}
+                            price={items.price}
+                            brand={items.get_brand}
+                            barcode={items.barcode}
+                            discount={items.discount}
+                            handleCloseMessage={handleCloseMessage}
+                          />
+                        </SwiperSlide>
+                      );
+                    })
                   )
-                )}
+                )
+              )}
             </Swiper>
           </div>
         </div>
@@ -145,8 +145,8 @@ const Home = () => {
                               brand={items.get_brand}
                               discount={""}
                               barcode={items.barcode}
- handleCloseMessage={handleCloseMessage}
- />
+                              handleCloseMessage={handleCloseMessage}
+                            />
                           </SwiperSlide>
                         );
                       })
@@ -166,7 +166,7 @@ const Home = () => {
               ) : (
                 brands.brand && (
                   brands.brand.map((brand) => (
-                    <Link to={"/products/?brand="+brand.id} key={brand.id} className="max-sm:w-2/5 mb-2 mx-1 p-1 flex align-middle">
+                    <Link to={"/products/?brand=" + brand.id} key={brand.id} className="max-sm:w-2/5 mb-2 mx-1 p-1 flex align-middle">
                       <img className="h-[50px]" src={brand.logo} alt="" />
                     </Link>
                     // <BoxBrands key={brand.id} id={brand.id} img={brand.price}  />

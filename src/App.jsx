@@ -43,7 +43,7 @@ function App() {
                     <Route path="/cart" element={<PrivateRoute component={ShoppingCart} />} />
                     <Route path="/login" element={<LogIn />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/buying/:id" element={<Buying />} />
+                    <Route path="/buying/:id" element={<PrivateRoute component={Buying} />} />
                   </Routes>
                   <Footer />
                 </Router>

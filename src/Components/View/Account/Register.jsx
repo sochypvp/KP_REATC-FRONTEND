@@ -21,15 +21,19 @@ const Register = () => {
 
   const handlerSubmit = async (e)=>{
     e.preventDefault();
-    await register(userDetails);
-    naviagate('/login');
+    const check = await register(userDetails);
+    if(check){
+      alert('You registered');
+      naviagate('/login');
+    }else{
+      alert('This phone number already registered');
+    }
+    
   }
-
-
  
 
   return (
-    <div className="flex pt-5 items-center justify-center bg-white py-10  px-4 sm:px-6 lg:px-8">
+    <div className="flex pt-[100px] items-center justify-center bg-white py-10  px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl w-full flex max-lg:flex-col items-center ">
         <header className="w-1/2 max-lg:w-full">
           <img src={logo} alt="" className="m-auto h-60" />

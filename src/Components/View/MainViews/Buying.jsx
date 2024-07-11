@@ -4,6 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 import ConfirmBox from "../SubViews/BoxAndLIst/ConfirmBox";
+import BoxForHome from "../SubViews/BoxAndLIst/BoxForHome";
+import Box from "../SubViews/BoxAndLIst/Box";
 
 const Buying = () => {
 
@@ -53,7 +55,7 @@ const Buying = () => {
   };
 
   const handleDecrement = () => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       setQuantity(quantity - 1);
       if (product) {
         let newQty = quantity - 1;
@@ -103,8 +105,9 @@ const Buying = () => {
       console.log(data);
       const check = await orderProductRequest(data);
       if (check.status) {
-        setShowMessage(true);
+        // setShowMessage(true);
         setAlertConfirm(false);
+        window.alert("successfully");
       } else {
         alert(check.message);
       }
@@ -195,21 +198,16 @@ const Buying = () => {
         </div>
         <div className="w-full max-lg:w-full">
           <div className="w-full flex flex-wrap justify-items-start">
-
-            <article className="relative w-1/5 max-lg:w-1/3 max-sm:w-2/4 pb text-sm max-sm:text-xs mb-10 pr-3 overflow-hidden">
-              <img
-                src={product.header_img}
-                alt=""
-                className="w-full m-auto object-cover object-center"
-              />
-              <h1 className="mt-4 text-black line-clamp-2">
-                {product.productName}
-              </h1>
-              <h1 className="mt-1 mb-4 text-slate-600">{product.brand}</h1>
-              <h1 className="absolute bottom-0 left-0 font-bold">
-                ${product.price}
-              </h1>
-            </article>
+            <Box
+              key={product.id}
+              id={product.id}
+              profile={product.header_img}
+              name={product.productName}
+              price={product.price}
+              brand={product.get_brand}
+              barcode={product.barcode}
+              discount={product.discount}
+            />
           </div>
         </div>
       </div>

@@ -145,7 +145,8 @@ export function UserProvider({ children }) {
             userData.userId = id;
             const response = await axios.post(`${BASE_API_URL}user/updateUserData`, userData);
             setUser(response.data);
-            setRequestCompleted(1);
+            setRequestCompleted(3);
+            return true;
         } catch (err) {
             if (err.response && err.response.status === 429) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
@@ -155,7 +156,7 @@ export function UserProvider({ children }) {
                 setLaoding(false);
             }
         } finally {
-            if (requestCompleted === 1) {
+            if (requestCompleted === 3) {
                 setLaoding(false);
             }
         }

@@ -16,7 +16,10 @@ const Profile = () => {
 
   const handleSubmitUser = async (e) => {
     e.preventDefault();
-    await updateUserData(userData);
+    const check = await updateUserData(userData);
+    if(check) {
+      alert('successfully !');
+    }
   }
 
 

@@ -35,6 +35,10 @@ const CheckOut = ({ product, error, loading, deliveryAddress }) => {
         // localStorage.setItem('mapLat', user.user.customer_address[0].lat);
         // localStorage.setItem('mapLng', user.user.customer_address[0].lng);
       }
+      else{
+        setAddress('3QMX+4PR, Krong Svay Rieng, Cambodia');
+        deliveryAddress('11.082832479596043|105.79927160482406');
+      }
     }
   }, [user.user]);
 
@@ -46,7 +50,7 @@ const CheckOut = ({ product, error, loading, deliveryAddress }) => {
     // localStorage.setItem('mapLng', items.lng);
   }
   //======== Google map API ==================================
-
+  console.log(markerPosition);
 
   const [isOpen, setIsOpen] = useState(false);
 

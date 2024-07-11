@@ -54,6 +54,12 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
     }
   };
 
+
+  let discountPercent = 0;
+  if(discount){
+    discountPercent = ((100 / price) * discount).toFixed(2);
+  }
+
   return (
     <article className="relative w-full h-full">
       <Link to={"/products/" + id} key={id} className="w-full h-full">
@@ -69,7 +75,7 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
           {brand.brandName}
           <img className="min-h-5 max-h-5"  src={brand.logo}/>
         </h1>
-        <h1 className="absolute text-lg bottom-1 left-0 font-bold">${price}</h1>
+        {/* <h1 className="absolute text-lg bottom-1 left-0 font-bold">${price}</h1> */}
         <button
           onClick={handleAddToCart}
           className="absolute  text-sm bottom-2 right-4 flex items-center justify-center"
@@ -100,10 +106,12 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
             )
           )
         }
-
         {
-          discount > 0 && (
-            <h1 className="bg-red-200 w-[60px] d-flex justify-center text-red-700 p-1">${discount}</h1>
+          discount && discount != 0 ? (
+            <h1 className="absolute flex text-lg bottom-1 left-0 font-bold ">${ price-discount }<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1><span className="text-sm font-normal text-red-500 bg-red-100 flex items-center p-1 ml-1 justify-center">{ discountPercent }%</span></h1>
+            // <h1 className="bg-red-500 w-[60px] d-flex justify-center text-white p-1">{discount}%</h1>
+          ) : (
+            <h1 className="absolute text-lg bottom-1 left-0 font-bold">${price}</h1>
           )
         }
       </Link>

@@ -17,7 +17,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import BoxForHome from "../SubViews/BoxAndLIst/BoxForHome";
 import axios from "axios";
 import { useUser } from "../context/userContext";
@@ -67,6 +67,8 @@ const ProductDetail = () => {
   const [loading, setLaoding] = useState(false);
   console.log(id);
 
+  const locationChange = useLocation();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -78,13 +80,14 @@ const ProductDetail = () => {
         }
         setLaoding(false);
         console.log(product);
+        window.scrollTo(0, 0);
       } catch (error) {
         setError(error);
         setLaoding(false);
       }
     }
     fetchData();
-  }, []);
+  }, [locationChange]);
 
   const { addFavorite, addToCart } = useUser();
 
@@ -377,7 +380,7 @@ const ProductDetail = () => {
                     similarProduct.map((items, key) => {
                       return (
                         <SwiperSlide
-                          key={1}
+                          key={key}
                           className="relative group pb-2 text-sm mb-10 overflow-hidden"
                         >
                           <BoxForHome

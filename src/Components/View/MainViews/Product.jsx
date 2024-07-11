@@ -83,7 +83,7 @@ const Product = () => {
   const mainCateg = searchParams.get('mainCateg');
   const brandId = searchParams.get('brand');
 
-  useEffect(() => { 
+  useEffect(() => {
     if (mainCateg) {
       showProductByMainCateg(mainCateg);
       mainCategClickHandler(parseInt(mainCateg))
@@ -143,7 +143,7 @@ const Product = () => {
                 <option value="1">Price (Low-Hight)</option>
                 <option value="2">Price (Hight-Low)</option>
               </select>
-              <select
+              {/* <select
                 name=""
                 id="numBoxes"
                 value={numBoxes}
@@ -152,7 +152,7 @@ const Product = () => {
               >
                 <option value="0">16 / Page</option>
                 {showByPage}
-              </select>
+              </select> */}
             </div>
           </div>
           <div className=" flex justify-between pt-3 ">
@@ -178,27 +178,31 @@ const Product = () => {
                     <Disclosure.Panel className="text-gray-500 pl-3 pb-2">
                       {mainCategory &&
                         (mainCategory.loading ? (
-                          <LoadingSpinner/>
+                          <LoadingSpinner />
                         ) : (
                           mainCategory.mainCateg &&
-                          mainCategory.mainCateg.map((main) => (
-                            <a
-                              onClick={() => { showProductByMainCateg(main.id), mainCategClickHandler(main.id) }}
-                              href="#"
-                              key={main.id}
-                              className={mainCategOnActive === main.id ? "text-red-600 w-ful flex my-1 pr-2 font-bold" : "w-ful flex my-1 pr-2"}
-                            >
-                              <label
-                                htmlFor=""
-                                className="w-full flex justify-between "
-                              >
-                                <h1>{main.categoryName}</h1>
-                                <h1 className="text-blue-500">
-                                  {main.total_product}
-                                </h1>
-                              </label>
-                            </a>
-                          ))
+                          mainCategory.mainCateg.map((main) => {
+                            if (main.total_product > 0)
+                              return (
+                                <a
+                                  onClick={() => { showProductByMainCateg(main.id), mainCategClickHandler(main.id) }}
+                                  href="#"
+                                  key={main.id}
+                                  className={mainCategOnActive === main.id ? "text-red-600 w-ful flex my-1 pr-2 font-bold" : "w-ful flex my-1 pr-2"}
+                                >
+                                  <label
+                                    htmlFor=""
+                                    className="w-full flex justify-between "
+                                  >
+                                    <h1>{main.categoryName}</h1>
+                                    <h1 className="text-blue-500">
+                                      {main.total_product}
+                                    </h1>
+                                  </label>
+                                </a>
+                              )
+                          }
+                          )
                         ))}
                     </Disclosure.Panel>
                   </>
@@ -224,27 +228,31 @@ const Product = () => {
                     <Disclosure.Panel className="text-gray-500 pl-3 pb-2">
                       {subCategory &&
                         (subCategory.loading ? (
-                          <LoadingSpinner/>
+                          <LoadingSpinner />
                         ) : (
                           subCategory.subCateg &&
-                          subCategory.subCateg.map((sub) => (
-                            <Link
-                              to={""}
-                              onClick={() => { showProductBySubCateg(sub.id, 1), subCategClickHandler(sub.id) }}
-                              key={sub.id}
-                              className={subCategOnActive === sub.id ? "text-red-600 w-ful flex my-1 pr-2 font-bold" : "w-ful flex my-1 pr-2"}
-                            >
-                              <label
-                                htmlFor=""
-                                className="w-full flex justify-between "
-                              >
-                                <h1>{sub.categoryName}</h1>
-                                <h1 className="text-blue-500">
-                                  {sub.total_product}
-                                </h1>
-                              </label>
-                            </Link>
-                          ))
+                          subCategory.subCateg.map((sub) => {
+                            if (sub.total_product > 0)
+                              return (
+                                <a
+                                  href="#"
+                                  onClick={() => { showProductBySubCateg(sub.id, 1), subCategClickHandler(sub.id) }}
+                                  key={sub.id}
+                                  className={subCategOnActive === sub.id ? "text-red-600 w-ful flex my-1 pr-2 font-bold" : "w-ful flex my-1 pr-2"}
+                                >
+                                  <label
+                                    htmlFor=""
+                                    className="w-full flex justify-between "
+                                  >
+                                    <h1>{sub.categoryName}</h1>
+                                    <h1 className="text-blue-500">
+                                      {sub.total_product}
+                                    </h1>
+                                  </label>
+                                </a>
+                              )
+                          }
+                          )
                         ))}
                     </Disclosure.Panel>
                   </>
@@ -270,27 +278,30 @@ const Product = () => {
                     <Disclosure.Panel className="text-gray-500 pl-3 pb-2">
                       {brand &&
                         (brand.loading ? (
-                          <LoadingSpinner/>
+                          <LoadingSpinner />
                         ) : (
                           brand.brand &&
-                          brand.brand.map((brand) => (
-                            <a
-                              onClick={() => { showProductByBrand(brand.id), brandClickHandler(brand.id) }}
-                              href="#"
-                              key={brand.id}
-                              className={barndOnActive === brand.id ? "text-red-600 w-ful flex my-1 pr-2 font-bold" : "w-ful flex my-1 pr-2"}
-                            >
-                              <label
-                                htmlFor=""
-                                className="w-full flex justify-between "
-                              >
-                                <h1>{brand.brandName}</h1>
-                                <h1 className="text-blue-500">
-                                  {brand.total_product}
-                                </h1>
-                              </label>
-                            </a>
-                          ))
+                          brand.brand.map((brand) => {
+                            if (brand.total_product)
+                              return (
+                                <a
+                                  onClick={() => { showProductByBrand(brand.id), brandClickHandler(brand.id) }}
+                                  href="#"
+                                  key={brand.id}
+                                  className={barndOnActive === brand.id ? "text-red-600 w-ful flex my-1 pr-2 font-bold" : "w-ful flex my-1 pr-2"}
+                                >
+                                  <label
+                                    htmlFor=""
+                                    className="w-full flex justify-between "
+                                  >
+                                    <h1>{brand.brandName}</h1>
+                                    <h1 className="text-blue-500">
+                                      {brand.total_product}
+                                    </h1>
+                                  </label>
+                                </a>
+                              )
+                          })
                         ))}
                     </Disclosure.Panel>
                   </>
@@ -302,7 +313,7 @@ const Product = () => {
               <div className="w-full flex flex-wrap justify-items-start">
                 {productContext &&
                   (productContext.loading ? (
-                    <LoadingSpinner/>
+                    <LoadingSpinner />
                   ) : (
                     productContext.product &&
                     productContext.product.map((pro) => {

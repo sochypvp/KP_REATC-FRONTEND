@@ -15,7 +15,7 @@ const ProductContext = createContext({
     showProductBySubCateg: (subCategId) => { },
     showProductByMainCateg: (mainCategId) => { },
     showProductByBrand: (brandId) => { },
-    showProductByHigh: () => { },
+    showProductByHight: () => { },
     showProductByLow: () => { },
     showSimilarProduct: (categoryName) => {}
 });
@@ -151,7 +151,7 @@ export function ProductProvider({ children }) {
         }
     }
 
-    const showProductByHigh = () => {
+    const showProductByHight  = () => {
         setProduct((prevProducts) => [...prevProducts].sort((a, b) => b.price - a.price));
     };
 
@@ -174,7 +174,7 @@ export function ProductProvider({ children }) {
                 showProductBySubCateg,
                 showProductByMainCateg,
                 showProductByBrand,
-                showProductByHigh,
+                showProductByHight,
                 showProductByLow,
                 showSimilarProduct
             }}

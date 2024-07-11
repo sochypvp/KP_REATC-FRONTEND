@@ -33,15 +33,15 @@ export function AuthProvider({children}){
         setError(null);
         try {
             const data = await apiRegister(userDetails);
-            if(!data.status){
-                setError(data.message);
-            }else{
-                setError("You have already register");
+            console.log(data);
+            if(data.status){
+                return true;
             }
+            setError(data.message);
+            return false;
         } catch (err) {
             setError(err.response ? err.response.data.message : err.message);
-        } finally {
-            setLaoding(false);
+            return false;
         }
     }, []);
 

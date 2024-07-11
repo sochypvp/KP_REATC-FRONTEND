@@ -33,7 +33,7 @@ const LogIn = () => {
     
   };
   return (
-    <div className="pt-5 flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="pt-[100px] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <header className="">
           <img src={logo} alt="" className="m-auto h-44" />
@@ -79,7 +79,7 @@ const LogIn = () => {
                 Password
               </label>
               <div className="relative">
-                <button
+                <a
                   className="absolute inset-y-0 right-2 flex items-center"
                 >
                   {credentials.password ? (
@@ -87,7 +87,7 @@ const LogIn = () => {
                   ) : (
                     <EyeSlashIcon className="h-4 w-4 text-gray-600" />
                   )}
-                </button>
+                </a>
                 <input
                 name="password"
                 type={credentials.password ? "text" : "password"}
@@ -133,11 +133,7 @@ const LogIn = () => {
               type="submit"
               className="w-full flex justify-center py-3 px-4 border bg-black hover:bg-opacity-90 border-b-black text-sm font-medium text-white"
             >
-              {
-                error ? (<>Loading...</>) : (
-                  loading ? "logging in ..." : "Log In"
-                )
-              }
+              Login
             </button>
           </div>
         </form>

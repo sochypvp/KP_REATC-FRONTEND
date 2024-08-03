@@ -5,6 +5,7 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import ShopLocation from "../GooleMap/ShopLocation";
 
 const Contact = () => {
   return (
@@ -20,7 +21,7 @@ const Contact = () => {
         <div className=" grid gap-8 py-4 mx-auto lg:grid-cols-3">
           <div>
             <h1 className="mt-2 text-2xl font-semibold text-gray-800 md:text-3xl ">
-              We’d love to hear from you
+              We'd love to hear from you
             </h1>
 
             <p className="mt-3 text-gray-500 ">
@@ -53,6 +54,10 @@ const Contact = () => {
               <p className="mt-2 text-sm">(+855) 088 816 8138</p>
               <p className="mt-2 text-sm">(+855) 070747583</p>
               <p className="mt-2 text-sm">(+855) 017 665 779</p>
+            </div>
+
+            <div className=" rounded-lg border-3 overflow-hidden text-black ">
+              <ShopLocation zoomLevel={8}/>
             </div>
           </div>
         </div>

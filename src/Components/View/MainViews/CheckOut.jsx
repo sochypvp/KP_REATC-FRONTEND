@@ -22,6 +22,7 @@ const CheckOut = ({ product, error, loading, deliveryAddress }) => {
 
   const [markerPosition, setMarkerPosition] = useState({lat: 11.082832479596043, lng: 105.79927160482406});
   const [address, setAddress] = useState('');
+  const [label, setLabel] = useState('You Address');
   const getAddress = (address, markLocation) => {
     setMarkerPosition(markLocation);
     setAddress(address);
@@ -44,8 +45,9 @@ const CheckOut = ({ product, error, loading, deliveryAddress }) => {
 
   const selectLocation = (items)=>{
     setAddress(items.address);
-    setMarkerPosition({lat: items.lat, lng: items.lng});
+    setMarkerPosition({lat: parseFloat(items.lat), lng: parseFloat(items.lng)});
     deliveryAddress(items.lat+"|"+items.lng);
+    setLabel(items.label);
     // localStorage.setItem('mapLat', items.lat);
     // localStorage.setItem('mapLng', items.lng);
   }
@@ -130,7 +132,7 @@ const CheckOut = ({ product, error, loading, deliveryAddress }) => {
                 </div>
                 <div className="flex items-center mb-2">
                   <MapPinIcon className="size-5 font-medium mr-1" />
-                  <h1 className="w-[80%] text-base font-semibold">{user && user.customerName}</h1>
+                  <h1 className="w-[80%] text-base font-semibold">{label && label}</h1>
                 </div>
                 <h2 className="text-sm font-semibold mb-1">
                   Address:
@@ -153,7 +155,7 @@ const CheckOut = ({ product, error, loading, deliveryAddress }) => {
                 loading ? (<>Loading</>) : (
                   product && (
                     product.map((data) => (
-                      <article key={data.id} className="relative w-1/5 max-lg:w-1/3 max-sm:w-2/4 pb text-sm max-sm:text-xs mb-10 pr-3">
+                      <article key={data.id} className="bg-gray-50 border m-1 p-1 shadow-sm relative w-1/5 max-lg:w-1/3 max-sm:w-2/4 pb text-sm max-sm:text-xs mb-10 pr-3">
                         <img
                           style={{ maxHeight: '120px', minHeight: "120px" }}
                           src={data.header_img}

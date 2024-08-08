@@ -26,8 +26,8 @@ const Product = () => {
   const showByPage = [];
 
   const PaginationHandler = (e) => {
-
     showProductByPage(e.target.getAttribute('data'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   //=== Show product by low and hight price
@@ -70,6 +70,7 @@ const Product = () => {
     setMainCategOnActive(id);
     setSubCategOnActive(0);
     SetBrandOnActive(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   const brandClickHandler = (id) => {
     SetBrandOnActive(id);
@@ -94,6 +95,7 @@ const Product = () => {
       brandClickHandler(parseInt(brandId))
       console.log(brandId);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [requestCompleted, mainCateg]);
   // === Check URL params ============================
 
@@ -102,7 +104,7 @@ const Product = () => {
 
   return (
     <div>
-      <div className="relative w-full pt-5 bg-white text-slate-950 overflow-hidden">
+      <div className="relative  w-full pt-5 bg-white text-slate-950 overflow-hidden">
         <div className="max-sm:w-full w-10/12 m-auto py-2 pl-4 lg:px-8">
           <div className="flex items-center text-base max-sm:text-sm pb-6">
             <Link to="/">

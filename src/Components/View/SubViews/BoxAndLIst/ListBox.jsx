@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/userContext";
+import Loading from "../../loading/loading";
 
 
 
@@ -46,15 +47,20 @@ const ListBox = (
 
   const [quantity, setQuantity] = useState(1);
   const [newPrice, setNewPrice] = useState(price);
+  const [check, setCheck] = useState(null);
 
   const { removeCart } = useUser();
 
   const hanldeRemoveCart = async (e) => {
+    setCheck(true);
     e.preventDefault();
     const response = await removeCart(cartId);
     if (response) {
       setMessage({ status: response, message: 'Remove successfully' });
+    } else {
+      setCheck(null);
     }
+
   }
 
 
@@ -72,7 +78,7 @@ const ListBox = (
       setQuantity(quantity + 1);
 
       favData.qty = quantity + 1;
-      
+
       let newQty = quantity + 1;
       let newPrice = parseInt(favData.price);
       setSubTotal(subTotal + parseFloat(favData.price));
@@ -140,22 +146,31 @@ const ListBox = (
   }
 
   return (
-    <article className=" w-full py-7 pr-2 border-b border-slate-400 text-sm">
-      <input checked={orderItems.includes(favData)} onChange={(event) => handleIsChecked(event)} className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-      <Link to={"/products/" + id} key={id} className="w-full h-full flex ">
-        <img
-          width="100px"
-          src={profile}
-          alt=""
-          className="m-auto object-cover object-center"
-        />
-        <div className="w-full pl-12 flex flex-col justify-between">
+    <article className=" w-full bg-gray-50 shadow-sm pr-2 border mb-1 mt-1 border-slate-400 text-sm">
+      <input checked={orderItems.includes(favData)} onChange={(event) => handleIsChecked(event)} className="form-check-input ml-1" type="checkbox" value="" id="flexCheckDefault" />
+      <div className="w-full h-full p-1 flex">
+        <Link to={"/products/" + id} key={id}>
+          <img
+            width="100px"
+            src={profile}
+            alt=""
+            className="ml-[25px] object-cover object-center absolute"
+          />
+        </Link>
+        <div className="w-full pl-12 flex flex-col justify-between ml-[100px]">
           <div className=" relative w-full">
             <h1 className="w-[80%] text-black">{name}</h1>
             <h1>{warranty}</h1>
             <button onClick={hanldeRemoveCart} className="absolute flex items-center top-0 right-0">
-              <TrashIcon className="w-4 h-4 mr-2" />
-              <p className="border-b border-black">remove</p>
+              <p className="border-b border-black">
+                {
+                  check ? (
+                    <Loading />
+                  ) : (
+                    <p className="flex items-center"><TrashIcon className="w-4 h-4 mr-2" />remove</p>
+                  )
+                }
+              </p>
             </button>
           </div>
           <div className="flex w-32 p-1 items-center justify-between text-black text-sm border border-slate-400">
@@ -167,7 +182,7 @@ const ListBox = (
               <PlusIcon className="w-4 h-4" />
             </button>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between mb-4">
             {
               discount && discount != 0 ? (
                 <h1 className=" flex text-lg bottom-0 left-0 font-bold ">${price - favData.discount}<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1></h1>
@@ -186,7 +201,7 @@ const ListBox = (
             </h1>
           </div>
         </div>
-      </Link>
+      </div>
     </article>
   );
 };

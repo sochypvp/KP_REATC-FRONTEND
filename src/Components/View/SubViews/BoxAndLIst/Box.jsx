@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { useUser } from "../../context/userContext";
 import { useNavigate } from "react-router-dom";
 import MessageBox from "./AlertBox";
+import Loading from "../../loading/loading";
 
 const Box = ({ id, profile, name, brand, price, discount }) => {
 
@@ -19,6 +20,8 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
   const { addFavorite, addToCart, userFavPdtId } = useUser();
 
   const [showMessage, setShowMessage] = useState(false);
+
+  const [check, setCheck] = useState(null);
 
   const handleCloseMessage = () => {
     setShowMessage(false);
@@ -46,6 +49,7 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
   };
   const handleAddToCart = async (e) => {
     e.preventDefault();
+    setCheck(true);
     if (localStorage.getItem('userId') != null) {
       const data = {
         productId: id,
@@ -54,8 +58,10 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
       const check = await addToCart(data);
       if (check) {
         setShowMessage(true);
+        setCheck(null); 
       } else {
         setShowMessage(false);
+        setCheck(null);
       }
     } else {
       navigate('/login');
@@ -68,7 +74,7 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
   }
 
   return (
-    <article className="relative h-[300px] w-1/4 max-md:w-3/6 max-sm:w-2/4 pb mb-10 pr-3 overflow-hidden">
+    <article className="relative border bg-gray-50 shadow-sm max-h-[300px] p-2 flex-wrap w-[24%] max-md:w-3/6 max-sm:w-2/4 pb mb-10 m-1 pr-3 overflow-hidden">
       {showMessage && (
         <>
           <MessageBox
@@ -92,18 +98,25 @@ const Box = ({ id, profile, name, brand, price, discount }) => {
         </h1>
         {
           discount && discount != 0 ? (
-            <h1 className="absolute flex text-lg bottom-0 left-0 font-bold ">${ price-discount }<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1><span className="text-sm font-normal text-red-500 bg-red-100 flex items-center p-1 ml-1 justify-center">{ discountPercent }%</span></h1>
+            <h1 className="absolute flex text-lg bottom-2 left-2 font-bold ">${ price-discount }<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1><span className="text-sm font-normal text-red-500 bg-red-100 flex items-center p-1 ml-1 justify-center">{ discountPercent }%</span></h1>
             // <h1 className="bg-red-500 w-[60px] d-flex justify-center text-white p-1">{discount}%</h1>
           ) : (
-            <h1 className="absolute text-lg bottom-0 left-0 font-bold">${price}</h1>
+            <h1 className="absolute text-lg bottom-2 left-2 font-bold">${price}</h1>
           )
         }
         {/* <h1 className="absolute text-lg bottom-0 left-0 font-bold">${price}</h1> */}
         <button
           onClick={handleAddToCart}
-          className="btn m-1 absolute text-lg bottom-0 right-4 flex items-center justify-center"
+          className=" m-1 absolute text-lg bottom-3 right-4 flex items-center justify-center"
         >
-          <ShoppingCartIcon className="w-4 h-4 " />
+          {
+            check ? (
+              <Loading/>
+            ) : (
+              <ShoppingCartIcon className="w-4 h-4 " />
+            )
+          }
+          
         </button>
         {
           userFavPdtId && (

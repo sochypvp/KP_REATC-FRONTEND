@@ -8,6 +8,7 @@ import {
 import PropTypes from "prop-types";
 import { useUser } from "../../context/userContext";
 import MessageBox from "./AlertBox";
+import Loading from "../../loading/loading";
 
 const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMessage }) => {
 
@@ -21,6 +22,8 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
 
   const [favorite, setFavorite] = useState(false);
   const [addToCarat, setAddToCarat] = useState(1);
+  const [check, setCheck] = useState(null);
+
   const handleFavorite = async (e) => {
     e.preventDefault();
     if (localStorage.getItem('userId') != null) {
@@ -40,6 +43,7 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
+    setCheck(true);
     if (localStorage.getItem('userId') != null) {
       const data = {
         productId: id,
@@ -48,6 +52,9 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
       const check = await addToCart(data);
       if (check) {
         setMessage({status: check, message: "Add successfully"});
+        setCheck(null);
+      }else{
+        setCheck(null);
       }
     } else {
       navigate('/login');
@@ -61,9 +68,9 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
   }
 
   return (
-    <article className="relative w-full h-full">
-      <Link to={"/products/" + id} key={id} className="w-full h-full">
-        <div className=" h-[200px] relative">
+    <article className="relative border bg-gray-50 m-1 p-2 w-full h-full shadow-sm">
+      <Link to={"/products/" + id} key={id} className="w-full">
+        <div className=" h-[150px] relative">
           <img
             src={profile}
             alt=""
@@ -78,10 +85,20 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
         {/* <h1 className="absolute text-lg bottom-1 left-0 font-bold">${price}</h1> */}
         <button
           onClick={handleAddToCart}
-          className="absolute  text-sm bottom-2 right-4 flex items-center justify-center"
+          className="absolute  text-sm bottom-3 right-4 flex items-center justify-center"
         >
-          <ShoppingCartIcon className="mr-1 w-4 h-4" />
-          <button onClick={handleAddToCart} className="border-b border-black">Add to Cart</button>
+          
+          <button onClick={handleAddToCart} className="border-b border-black flex items-center">
+            {
+              check ? (
+                <Loading/>
+              ) : (
+                <>
+                  <ShoppingCartIcon className="mr-1 w-4 h-4" />Add to Cart
+                </>
+              )
+            }
+          </button>
         </button>
         {
           userFavPdtId && (
@@ -108,10 +125,10 @@ const BoxForHome = ({ id, profile, name, brand, price, discount, handleCloseMess
         }
         {
           discount && discount != 0 ? (
-            <h1 className="absolute flex text-lg bottom-1 left-0 font-bold ">${ price-discount }<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1><span className="text-sm font-normal text-red-500 bg-red-100 flex items-center p-1 ml-1 justify-center">{ discountPercent }%</span></h1>
+            <h1 className="absolute flex text-lg bottom-2 left-2 font-bold ">${ price-discount }<h1 className="ml-1 text-sm lg:text-base line-through font-semibold text-red-500">${price}</h1><span className="text-sm font-normal text-red-500 bg-red-100 flex items-center p-1 ml-1 justify-center">{ discountPercent }%</span></h1>
             // <h1 className="bg-red-500 w-[60px] d-flex justify-center text-white p-1">{discount}%</h1>
           ) : (
-            <h1 className="absolute text-lg bottom-1 left-0 font-bold">${price}</h1>
+            <h1 className="absolute text-lg bottom-2 left-2 font-bold">${price}</h1>
           )
         }
       </Link>

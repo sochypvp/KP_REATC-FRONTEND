@@ -166,7 +166,7 @@ const Home = () => {
               ) : (
                 brands.brand && (
                   brands.brand.map((brand) => (
-                    <Link to={"/products/?brand=" + brand.id} key={brand.id} className="max-sm:w-2/5 mb-2 mx-1 p-1 flex align-middle">
+                    <Link to={"/products/?brand=" + brand.id} key={brand.id} className="max-sm:w-2/5 mb-2 border shadow-sm mx-1 p-1 flex align-middle">
                       <img className="h-[50px]" src={brand.logo} alt="" />
                     </Link>
                     // <BoxBrands key={brand.id} id={brand.id} img={brand.price}  />

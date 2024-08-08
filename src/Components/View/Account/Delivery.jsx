@@ -38,7 +38,7 @@ const Delivery = () => {
     setNote(e.target.value);
   }
   const [markerPosition, setMarkerPosition] = useState(initialCenter);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState('3QMX+5H9, ផ្លូវលេខ ១០៧, Svay Rieng, Cambodia');
   const getAddress = (address) => {
     setAddress(address);
   };
@@ -82,8 +82,8 @@ const Delivery = () => {
   }
   const showLocation = (items)=>{
     setMarkerPosition({
-      lat: items.lat,
-      lng: items.lng,
+      lat: parseFloat(items.lat),
+      lng: parseFloat(items.lng),
     });
     setNote(items.note);
     setLabel(items.label);

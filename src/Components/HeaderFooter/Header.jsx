@@ -28,6 +28,7 @@ const Header = () => {
   const [onActive, setOnActive] = useState("");
   const onActiveHandler = (objActive) => {
     setOnActive(objActive);
+    // window.location.reload();
   }
   // === Active event ================================
   if (localStorage.getItem('userId')) {
@@ -45,6 +46,19 @@ const Header = () => {
   
   // all element
   const navBarButtonActive = "border-l-2 border-r-2 pl-2 shadow-xl pr-2 border-gray-600 text-sm font-semibold leading-6";
+
+
+
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsPopoverOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPopoverOpen(false);
+  };
+
 
   return (
     <header className="bg-white w-full border-b" style={{ position: "fixed", zIndex: "1000" }}>
@@ -75,7 +89,7 @@ const Header = () => {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <Popover.Group className="hidden lg:flex lg:gap-x-12 justify-center items-center">
+        {/* <Popover.Group className="hidden lg:flex lg:gap-x-12 justify-center items-center">
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
               Category
@@ -142,7 +156,82 @@ const Header = () => {
               Contact us
             </p>
           </Link>
-        </Popover.Group>
+        </Popover.Group> */}
+        <Popover.Group className="hidden lg:flex lg:gap-x-12 justify-center items-center">
+      {/* Popover for Categories */}
+      <Popover className="relative">
+        {/* Div to toggle Popover visibility on hover */}
+        <div
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
+        >
+          Category
+          <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
+        </div>
+
+        {/* Transition for Popover Panel */}
+        <Transition
+          as={Fragment}
+          show={isPopoverOpen}
+          enter="transition ease-out duration-200"
+          enterFrom="opacity-0 translate-y-1"
+          enterTo="opacity-100 translate-y-0"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100 translate-y-0"
+          leaveTo="opacity-0 translate-y-1"
+        >
+          {/* Popover Panel containing category links */}
+          <Popover.Panel
+            className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div className="p-4">
+              {mainCategoryContext.loading ? (
+                // Loading state
+                <>Loading...</>
+              ) : (
+                // Render category links if data is available
+                mainCategoryContext.mainCateg && (
+                  mainCategoryContext.mainCateg.map((cateItem) => (
+                    <Link
+                      onClick={() => onActiveHandler("product")}
+                      to={`/products/?mainCateg=${cateItem.id}`}
+                      key={cateItem.id}
+                      className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
+                    >
+                      <div>
+                        <p className="block font-semibold text-gray-900">
+                          {cateItem.categoryName}
+                        </p>
+                      </div>
+                    </Link>
+                  ))
+                )
+              )}
+            </div>
+          </Popover.Panel>
+        </Transition>
+      </Popover>
+
+      {/* Other navigation links */}
+      <Link onClick={() => onActiveHandler("home")} to="/">
+        <p className={location.pathname === "/" ? navBarButtonActive : "text-sm font-semibold leading-6 text-gray-900"}>
+          Home
+        </p>
+      </Link>
+      <Link onClick={() => onActiveHandler("product")} to="/products">
+        <p className={location.pathname.startsWith("/products") ? navBarButtonActive : "text-sm font-semibold leading-6 text-gray-900"}>
+          Products
+        </p>
+      </Link>
+      <Link onClick={() => onActiveHandler("contact")} to="/contact">
+        <p className={location.pathname === "/contact" ? navBarButtonActive : "text-sm font-semibold leading-6 text-gray-900"}>
+          Contact us
+        </p>
+      </Link>
+    </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center">
           <Link to="/my_account/favorite">
             <div className="relative flex items-center justify-center mr-5 ">

@@ -5,7 +5,7 @@ const useFetch = (apiFunction) => {
     const [error,setError] = useState(null);
     const [loading, setLaoding] = useState(false);
 
-    useEffect(()=>{
+    useEffect(()=>{index-T95vsS5e.js
         const fetchData = async ()=>{
             try {
                 const result = await apiFunction();

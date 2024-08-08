@@ -24,14 +24,14 @@ export function UserProvider({ children }) {
     useEffect(() => {
         const fetchData = async (userId) => {
             try {
-                const response1 = await axios.get(`${BASE_API_URL}user/getFav/?userId=${userId}`);
+                const response1 = await axios.get(`${BASE_API_URL}user/getFav?userId=${userId}`);
                 setUserFav(response1.data);
                 const favPdtId = response1.data.products.map((items)=>{
                     return items.id;
                 });
                 setUserFavPdtId(favPdtId);
 
-                const response2 = await axios.get(`${BASE_API_URL}user/getCart/?userId=${userId}`);
+                const response2 = await axios.get(`${BASE_API_URL}user/getCart?userId=${userId}`);
                 setUserCart(response2.data);
 
                 const response3 = await axios.get(`${BASE_API_URL}user/getUserData?userId=${userId}`);
@@ -84,7 +84,7 @@ export function UserProvider({ children }) {
     }
     const removeFavorite = async (favId) => {
         try {
-            const response = await axios.get(`${BASE_API_URL}user/removeFav/?favId=${favId}`);
+            const response = await axios.get(`${BASE_API_URL}user/removeFav?favId=${favId}`);
             setRequestCompleted(0);
             return response.data.status;
         } catch (err) {
@@ -123,7 +123,7 @@ export function UserProvider({ children }) {
 
     const removeCart = async (cartId) => {
         try {
-            await axios.get(`${BASE_API_URL}user/removeCart/?cartId=${cartId}`);
+            await axios.get(`${BASE_API_URL}user/removeCart?cartId=${cartId}`);
             setRequestCompleted(0);
         } catch (err) {
             if (err.response && err.response.status == 429) {
